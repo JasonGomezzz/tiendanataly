@@ -87,6 +87,8 @@ class Product(models.Model):
 
     def sync_agotado(self):
         """Alterna publicado <-> agotado según el stock disponible real."""
+        if self.tipo_venta == self.TipoVenta.POR_ENCARGO:
+            return  # los pedidos por encargo no dependen del stock en Lima
         total = self.stock_total_disponible
         if self.estado == self.Estado.PUBLICADO and total <= 0:
             self.estado = self.Estado.AGOTADO
