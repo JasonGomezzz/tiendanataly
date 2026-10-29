@@ -82,6 +82,7 @@ export default async function OrderPage({ params }: { params: Promise<{ token: s
           ))}
         </ul>
         <dl className="mt-4 space-y-1 text-sm">
+          {Number(order.descuento_pen) > 0 && <div className="flex justify-between text-rose-text"><dt>Oferta aplicada</dt><dd>− {money(order.descuento_pen)}</dd></div>}
           <div className="flex justify-between"><dt>Envío</dt><dd>{Number(order.envio_pen) === 0 ? "Gratis" : money(order.envio_pen)}</dd></div>
           <div className="flex justify-between text-base font-medium"><dt>Total</dt><dd>{money(order.total_pen)}</dd></div>
         </dl>

@@ -38,9 +38,12 @@ export function CartDrawer() {
         </div>
         {cart.items.length > 0 && (
           <div className="border-t border-stone/30 px-6 py-5">
+            {Number(cart.descuento) > 0 && (
+              <p className="flex justify-between text-xs text-rose-text"><span>Oferta aplicada</span><span>− {money(cart.descuento)}</span></p>
+            )}
             <p className="flex justify-between text-sm uppercase tracking-widest">
               <span>Subtotal</span>
-              <span>{money(cart.subtotal)}</span>
+              <span>{money(cart.total)}</span>
             </p>
             <p className="mt-1 text-xs text-umber">El envío se calcula en el siguiente paso.</p>
             <Link

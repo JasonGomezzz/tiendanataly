@@ -14,7 +14,7 @@ type Ctx = {
   refresh: () => Promise<void>;
 };
 
-const EMPTY: Cart = { items: [], count: 0, subtotal: "0" };
+const EMPTY: Cart = { items: [], count: 0, subtotal: "0", descuento: "0", total: "0" };
 const CartContext = createContext<Ctx | null>(null);
 
 export function useCart() {

@@ -13,9 +13,19 @@ export function CartLines({ onNavigate }: { onNavigate?: () => void }) {
     return <p className="py-10 text-center text-sm text-umber">Tu bolsa está vacía.</p>;
   }
 
+  // Cantidad total por producto (las variantes del mismo producto suman para la oferta).
+  const qtyByProduct = cart.items.reduce<Record<string, number>>((acc, l) => ({ ...acc, [l.producto_slug]: (acc[l.producto_slug] ?? 0) + l.cantidad }), {});
+  const seen = new Set<string>();
+
   return (
     <ul className="divide-y divide-stone/30">
-      {cart.items.map((line) => (
+      {cart.items.map((line) => {
+        const total = qtyByProduct[line.producto_slug];
+        const first = !seen.has(line.producto_slug);
+        seen.add(line.producto_slug);
+        const missing = line.oferta ? line.oferta.cantidad - (total % line.oferta.cantidad) : 0;
+        const hint = line.oferta && first && line.ok && missing !== line.oferta.cantidad ? `Agrega ${missing} más y llévalas ${line.oferta.cantidad} por ${money(line.oferta.precio)}` : null;
+        return (
         <li key={line.id} className="flex gap-4 py-5">
           <Link href={`/producto/${line.producto_slug}`} onClick={onNavigate} className="relative h-28 w-22 shrink-0 bg-paper">
             {line.imagen && <Image src={line.imagen} alt={line.nombre} fill sizes="88px" className="object-cover" />}
@@ -24,6 +34,7 @@ export function CartLines({ onNavigate }: { onNavigate?: () => void }) {
             <p className="text-sm font-medium uppercase tracking-wide">{line.nombre}</p>
             {line.variante && <p className="text-xs text-umber">{line.variante}</p>}
             <p className="mt-1 text-sm">{money(line.precio_unitario)}</p>
+            {hint && <p className="mt-1 text-xs text-rose-text">{hint}</p>}
             {!line.ok && (
               <p role="alert" className="mt-1 text-xs text-rose">
                 {line.disponible > 0 ? `Solo quedan ${line.disponible}.` : "Ya no está disponible."}
@@ -59,7 +70,8 @@ export function CartLines({ onNavigate }: { onNavigate?: () => void }) {
             </div>
           </div>
         </li>
-      ))}
+        );
+      })}
     </ul>
   );
 }

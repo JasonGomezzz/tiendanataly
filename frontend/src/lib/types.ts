@@ -9,6 +9,8 @@ export type ProductCard = {
   linea: string;
   tipo_venta: "stock_local" | "por_encargo";
   precio_venta_pen: string;
+  oferta_cantidad: number | null;
+  oferta_precio: string | null;
   imagen_principal: string | null;
   stock: number;
   ultimas_unidades: boolean;
@@ -73,9 +75,10 @@ export type CartLine = {
   subtotal: string;
   disponible: number;
   ok: boolean;
+  oferta: { cantidad: number; precio: string } | null;
 };
 
-export type Cart = { items: CartLine[]; count: number; subtotal: string };
+export type Cart = { items: CartLine[]; count: number; subtotal: string; descuento: string; total: string };
 
 export type OrderState = "PENDIENTE_PAGO" | "PAGADO" | "COMPRADO" | "EN_CAMINO" | "EN_LIMA" | "ENTREGADO" | "CANCELADO" | "EXPIRADO";
 
@@ -85,6 +88,7 @@ export type Order = {
   estado: OrderState;
   tipo_venta: "stock_local" | "por_encargo";
   subtotal_pen: string;
+  descuento_pen: string;
   envio_pen: string;
   total_pen: string;
   adelanto_pen: string;

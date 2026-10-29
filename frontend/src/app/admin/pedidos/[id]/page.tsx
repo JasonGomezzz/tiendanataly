@@ -101,6 +101,7 @@ export default function OrderDetail() {
           {o.items.map((i) => <li key={i.sku} className="flex justify-between py-2"><span>{i.cantidad} × {i.nombre}</span><span>{money(Number(i.precio) * i.cantidad)}</span></li>)}
         </ul>
         <dl className="mt-3 space-y-1 border-t border-stone/30 pt-3">
+          {Number(o.descuento_pen) > 0 && <div className="flex justify-between text-rose-text"><dt>Oferta aplicada</dt><dd>− {money(o.descuento_pen)}</dd></div>}
           <div className="flex justify-between"><dt>Envío</dt><dd>{money(o.envio_pen)}</dd></div>
           <div className="flex justify-between font-medium"><dt>Total</dt><dd>{money(o.total_pen)}</dd></div>
           {o.tipo_venta === "por_encargo" && <div className="flex justify-between text-umber"><dt>Saldo pendiente</dt><dd>{money(o.saldo_pen)}</dd></div>}

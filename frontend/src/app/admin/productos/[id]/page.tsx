@@ -13,6 +13,7 @@ import { api, ApiError, messageFrom } from "@/lib/client";
 const toDraft = (p: AdminProduct): ProductDraft => ({
   nombre: p.nombre, marca: String(p.marca), categoria: String(p.categoria), tipo_venta: p.tipo_venta, linea: p.linea, descripcion: p.descripcion,
   detalles: p.detalles, notas_internas: p.notas_internas, precio_compra_usd: p.precio_compra_usd ?? "", margen: p.margen ?? "", precio_venta_pen: p.precio_venta_pen ?? "",
+  oferta_cantidad: p.oferta_cantidad ? String(p.oferta_cantidad) : "", oferta_precio: p.oferta_precio ?? "",
 });
 
 export default function EditProduct() {

@@ -45,6 +45,8 @@ export type AdminProduct = {
   precio_compra_usd?: string | null;
   margen?: string | null;
   precio_venta_pen?: string | null;
+  oferta_cantidad?: number | null;
+  oferta_precio?: string | null;
   stock_total: number;
   variantes: AdminVariant[];
   imagenes: AdminImage[];
@@ -61,6 +63,7 @@ export type AdminOrder = {
   total_pen: string;
   envio_pen: string;
   subtotal_pen: string;
+  descuento_pen: string;
   adelanto_pen: string;
   saldo_pen: string;
   metodo_entrega: string;

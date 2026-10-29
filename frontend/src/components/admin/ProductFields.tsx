@@ -19,11 +19,13 @@ export type ProductDraft = {
   precio_compra_usd: string;
   margen: string;
   precio_venta_pen: string;
+  oferta_cantidad: string;
+  oferta_precio: string;
 };
 
 export const EMPTY_DRAFT: ProductDraft = {
   nombre: "", marca: "", categoria: "", tipo_venta: "stock_local", linea: "", descripcion: "", detalles: "", notas_internas: "",
-  precio_compra_usd: "", margen: "", precio_venta_pen: "",
+  precio_compra_usd: "", margen: "", precio_venta_pen: "", oferta_cantidad: "", oferta_precio: "",
 };
 
 /** Campos del producto + ayuda de precio (solo si el rol puede ver finanzas). */
@@ -70,6 +72,11 @@ export function ProductFields({ draft, onChange }: { draft: ProductDraft; onChan
             <div><label className={labelClass} htmlFor="mar">Margen (S/)</label><input id="mar" inputMode="decimal" value={draft.margen} onChange={set("margen")} className={inputClass} placeholder="Usa el de Ajustes" /></div>
             <div><label className={labelClass} htmlFor="pv">Precio de venta (S/)</label><input id="pv" inputMode="decimal" value={draft.precio_venta_pen} onChange={set("precio_venta_pen")} className={inputClass} /></div>
           </div>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div><label className={labelClass} htmlFor="oc">Oferta: llevando (unidades)</label><input id="oc" inputMode="numeric" value={draft.oferta_cantidad} onChange={set("oferta_cantidad")} className={inputClass} placeholder="Ej: 2" /></div>
+            <div><label className={labelClass} htmlFor="op">Oferta: precio por esas unidades (S/)</label><input id="op" inputMode="decimal" value={draft.oferta_precio} onChange={set("oferta_precio")} className={inputClass} placeholder="Ej: 90" /></div>
+          </div>
+          <p className="text-xs text-umber">Déjalos vacíos si no hay oferta. Las variantes del mismo producto suman para la oferta (por ejemplo, dos fragancias distintas).</p>
           <button type="button" onClick={calculate} disabled={!draft.precio_compra_usd} className="min-h-12 w-full border border-ink text-xs font-medium uppercase tracking-[0.16em] disabled:opacity-40">Calcular precio sugerido</button>
           {calcError && <p role="alert" className="text-sm text-rose-text">{calcError}</p>}
           {calc && (
@@ -128,6 +135,8 @@ export function toPayload(d: ProductDraft, finance: boolean) {
     base.precio_compra_usd = d.precio_compra_usd || null;
     base.margen = d.margen || null;
     base.precio_venta_pen = d.precio_venta_pen || null;
+    base.oferta_cantidad = d.oferta_cantidad ? Number(d.oferta_cantidad) : null;
+    base.oferta_precio = d.oferta_precio || null;
   }
   return base;
 }

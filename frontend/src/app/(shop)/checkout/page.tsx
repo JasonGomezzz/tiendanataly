@@ -36,7 +36,7 @@ export default function CheckoutPage() {
   const zone = zones.find((z) => z.id === zoneId) ?? null;
   const needsAddress = zone?.metodo !== "recojo";
   const shipping = Number(zone?.costo ?? 0);
-  const total = useMemo(() => Number(cart.subtotal) + shipping, [cart.subtotal, shipping]);
+  const total = useMemo(() => Number(cart.total) + shipping, [cart.total, shipping]);
   const blocked = cart.items.length === 0 || cart.items.some((i) => !i.ok);
   const set = (k: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setForm((f) => ({ ...f, [k]: e.target.value }));
 
@@ -143,6 +143,7 @@ export default function CheckoutPage() {
         </ul>
         <dl className="mt-5 space-y-2 border-t border-stone/40 pt-4 text-sm">
           <div className="flex justify-between"><dt>Subtotal</dt><dd>{money(cart.subtotal)}</dd></div>
+          {Number(cart.descuento) > 0 && <div className="flex justify-between text-rose-text"><dt>Oferta aplicada</dt><dd>− {money(cart.descuento)}</dd></div>}
           <div className="flex justify-between"><dt>Envío</dt><dd>{zone ? (shipping === 0 ? "Gratis" : money(shipping)) : "—"}</dd></div>
           <div className="flex justify-between border-t border-stone/40 pt-3 text-base font-medium"><dt>Total</dt><dd>{money(total)}</dd></div>
         </dl>

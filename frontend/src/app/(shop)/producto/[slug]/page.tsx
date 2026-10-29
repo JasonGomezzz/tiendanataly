@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Gallery } from "@/components/Gallery";
 import { ProductBuy } from "@/components/ProductBuy";
-import { Accordion, PayBadges, ProductCard, StockBadge } from "@/components/ui";
+import { Accordion, PayBadges, ProductCard, StockBadge, offerText } from "@/components/ui";
 import { getProduct, getProducts, getRelated, getStore } from "@/lib/api";
 import { absolute, money } from "@/lib/format";
 
@@ -74,6 +74,11 @@ export default async function ProductPage({ params }: Params) {
           <h1 className="mt-2 text-2xl font-semibold uppercase leading-snug tracking-wide">{product.nombre}</h1>
           <p className="mt-1 text-xs uppercase tracking-[0.16em] text-umber">{product.marca.nombre}{product.linea ? ` · ${product.linea}` : ""}</p>
           <p className="mt-4 text-2xl">{money(product.precio_venta_pen)}</p>
+          {offerText(product) && (
+            <p className="mt-2 inline-block bg-blush px-3 py-1.5 text-xs font-medium uppercase tracking-[0.14em] text-rose-text">
+              Oferta: {offerText(product)}{product.variantes.length > 1 ? " · puedes combinar opciones" : ""}
+            </p>
+          )}
           <div className="mt-3 flex flex-wrap items-center gap-3">
             <span className="text-xs text-umber">Paga con</span>
             <PayBadges />
