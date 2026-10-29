@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     "apps.payments",
     "apps.shipping",
     "apps.legal",
-    "apps.integrations",
+    "apps.integrations.apps.IntegrationsConfig",
 ]
 
 AUTH_USER_MODEL = "accounts.User"
