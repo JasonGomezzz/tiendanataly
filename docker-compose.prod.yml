@@ -1,0 +1,123 @@
+name: tiendanataly-prod
+
+# Producción en un VPS: docker compose -f docker-compose.prod.yml --env-file .env.prod up -d --build
+x-backend: &backend
+  build: ./backend
+  env_file: .env.prod
+  environment:
+    DJANGO_SETTINGS_MODULE: config.settings.prod
+    BEHIND_PROXY: "true"
+    SERVE_MEDIA: "true"
+    SEED_DIR: /seed
+  restart: unless-stopped
+  volumes:
+    - media:/app/media
+    - static:/app/staticfiles
+    - ./seed:/seed:ro
+  depends_on:
+    db:
+      condition: service_healthy
+    redis:
+      condition: service_started
+
+services:
+  db:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+
+  backend:
+    <<: *backend
+    command: >
+      sh -c "python manage.py migrate --noinput &&
+             python manage.py setup_roles &&
+             python manage.py collectstatic --noinput &&
+             gunicorn config.wsgi:application --bind 0.0.0.0:8000 --workers 3 --timeout 60 --access-logfile -"
+    healthcheck:
+      # El header evita la redirección a HTTPS que Django haría a una petición interna sin proxy.
+      test: ["CMD", "python", "-c", "import urllib.request as u; u.urlopen(u.Request('http://localhost:8000/health/', headers={'X-Forwarded-Proto': 'https'}))"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+
+  worker:
+    <<: *backend
+    command: celery -A config worker -l info --concurrency 2
+
+  beat:
+    <<: *backend
+    command: celery -A config beat -l info --schedule /tmp/celerybeat-schedule
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.prod
+      args:
+        NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL}
+        NEXT_PUBLIC_STORE_NAME: ${NEXT_PUBLIC_STORE_NAME}
+    restart: unless-stopped
+    environment:
+      API_INTERNAL_URL: http://backend:8000
+      REVALIDATE_SECRET: ${REVALIDATE_SECRET}
+    depends_on:
+      - backend
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - "${HTTP_PORT:-80}:80"
+      - "${HTTPS_PORT:-443}:443"
+    environment:
+      SITE_ADDRESS: ${SITE_ADDRESS}
+      ADMIN_URL_PATH: ${ADMIN_URL_PATH}
+    volumes:
+      - ./infra/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+      - media:/srv/media:ro
+      - static:/srv/static:ro
+    depends_on:
+      - backend
+      - frontend
+
+  backup:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      PGHOST: db
+      PGUSER: ${POSTGRES_USER}
+      PGPASSWORD: ${POSTGRES_PASSWORD}
+      PGDATABASE: ${POSTGRES_DB}
+      BACKUP_KEEP_DAYS: ${BACKUP_KEEP_DAYS:-14}
+    volumes:
+      - ./scripts:/scripts:ro
+      - backups:/backups
+      - media:/media:ro
+    depends_on:
+      db:
+        condition: service_healthy
+    # Una copia al arrancar y luego cada 24 h (03:00 aprox. si el servicio se levanta a esa hora).
+    command: sh -c "while true; do sh /scripts/backup.sh; sleep 86400; done"
+
+volumes:
+  pgdata:
+  media:
+  static:
+  backups:
+  caddy_data:
+  caddy_config:

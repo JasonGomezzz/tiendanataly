@@ -35,3 +35,4 @@ backups/*.dump
 .DS_Store
 Thumbs.db
 celerybeat-schedule*
+!.env.prod.example
