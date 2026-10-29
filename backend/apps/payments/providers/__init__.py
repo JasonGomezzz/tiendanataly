@@ -1,9 +1,10 @@
 from django.conf import settings
 
 from .base import PaymentProvider
+from .culqi import CulqiProvider
 from .manual import ManualYapePlinProvider
 
-_REGISTRY = {ManualYapePlinProvider.name: ManualYapePlinProvider}
+_REGISTRY = {ManualYapePlinProvider.name: ManualYapePlinProvider, CulqiProvider.name: CulqiProvider}
 
 
 def get_provider(name=None) -> PaymentProvider:

@@ -160,7 +160,7 @@ ALLOWED_IMAGE_FORMATS = {"JPEG", "PNG", "WEBP"}
 # --- Admin / 2FA ------------------------------------------------------------
 ADMIN_URL_PATH = env("ADMIN_URL_PATH", default="panel-nataly-cambiar/")
 ADMIN_REQUIRE_2FA = env.bool("ADMIN_REQUIRE_2FA", default=False)
-OTP_TOTP_ISSUER = env("STORE_NAME", default="Tienda Nataly")
+OTP_TOTP_ISSUER = env("STORE_NAME", default="Marle Fashion")
 
 # --- Bloqueo por intentos fallidos (django-axes) -----------------------------
 AXES_FAILURE_LIMIT = 5
@@ -206,9 +206,17 @@ CELERY_TIMEZONE = TIME_ZONE
 CELERY_TASK_ALWAYS_EAGER = False
 
 # --- Negocio ----------------------------------------------------------------
-STORE_NAME = env("STORE_NAME", default="Tienda Nataly")
+STORE_NAME = env("STORE_NAME", default="Marle Fashion")
 STORE_WHATSAPP = env("STORE_WHATSAPP", default="")
 PAYMENTS_PROVIDER = env("PAYMENTS_PROVIDER", default="manual_yape_plin")
+# Culqi. La clave secreta solo vive en el backend. CULQI_API_BASE y la unidad del monto (céntimos)
+# deben confirmarse contra el sandbox antes de salir a producción (ver docs/pagos-culqi.md).
+CULQI_PUBLIC_KEY = env("CULQI_PUBLIC_KEY", default="")
+CULQI_SECRET_KEY = env("CULQI_SECRET_KEY", default="")
+CULQI_API_BASE = env("CULQI_API_BASE", default="https://api.culqi.com/v2")
+CULQI_WEBHOOK_SECRET = env("CULQI_WEBHOOK_SECRET", default="")
+CULQI_WEBHOOK_BASIC_USER = env("CULQI_WEBHOOK_BASIC_USER", default="")
+CULQI_WEBHOOK_BASIC_PASSWORD = env("CULQI_WEBHOOK_BASIC_PASSWORD", default="")
 FRONTEND_URL = env("FRONTEND_URL", default="http://frontend:3000")
 REVALIDATE_SECRET = env("REVALIDATE_SECRET", default="")
 N8N_WEBHOOK_URL = env("N8N_WEBHOOK_URL", default="")
