@@ -35,6 +35,6 @@
 - [ ] `PAYMENTS_PROVIDER=culqi` + llaves en `.env.prod`; configurar la comisión real en Ajustes y recalcular precios.
 
 ## Operación continua
-- Revisar semanalmente los PR de Dependabot y el resultado de CI.
+- Activar la CI: copiar `infra/github-ci.yml.example` a `.github/workflows/ci.yml` (requiere permiso `workflow` en GitHub). Revisar semanalmente los PR de Dependabot y su resultado.
 - Probar la restauración de respaldos cada mes.
 - Rotar `CULQI_SECRET_KEY`, `REVALIDATE_SECRET`, `N8N_WEBHOOK_SECRET` si alguna vez se exponen.

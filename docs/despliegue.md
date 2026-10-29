@@ -71,4 +71,4 @@ Las fotos y comprobantes viven en el disco del VPS (volumen `media`), se sirven 
 - `docker compose ... ps` y `logs -f backend` ante cualquier reclamo.
 - Un chequeo externo gratuito (UptimeRobot o similar) a `https://TU-DOMINIO/health/`.
 - Revisa `/admin` → pedidos "Pendiente de pago" con comprobante: es la tarea diaria de la administradora.
-- Dependabot y CI (`.github/`) avisan de actualizaciones y vulnerabilidades.
+- Dependabot (`.github/dependabot.yml`) avisa de actualizaciones y vulnerabilidades. Para activar la CI copia `infra/github-ci.yml.example` a `.github/workflows/ci.yml` (el token con el que se subió este código no tenía permiso `workflow`; hazlo desde la web de GitHub o con un token que lo incluya).
