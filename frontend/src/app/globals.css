@@ -8,6 +8,8 @@
   --color-umber: #605b51;
   --color-umber-dark: #4d3222;
   --color-rose: #ad705c;
+  /* Versión más oscura del acento para texto pequeño (contraste WCAG AA sobre blanco). */
+  --color-rose-text: #8a4a38;
   --color-blush: #f6e9e4;
 
   --font-serif: var(--font-cormorant), Georgia, serif;
