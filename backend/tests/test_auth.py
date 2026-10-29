@@ -132,6 +132,7 @@ def test_recuperar_contrasena_no_revela_si_el_correo_existe(api, customer_user):
 def test_flujo_de_recuperacion_de_contrasena(api, customer_user, mailoutbox):
     api.post("/api/v1/auth/password/reset/", {"email": "clienta1@example.com"}, format="json")
     body = mailoutbox[0].body
+    assert body.count("http://localhost:3000/restablecer?uid=") == 1
     uid = body.split("uid=")[1].split("&")[0]
     token = body.split("token=")[1].split()[0]
     assert api.post("/api/v1/auth/password/reset/confirm/", {"uid": uid, "token": token, "password": "123"}, format="json").status_code == 400

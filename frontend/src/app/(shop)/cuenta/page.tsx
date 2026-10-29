@@ -125,6 +125,7 @@ export default function AccountPage() {
         {error && <p role="alert" className="text-sm text-rose-text">{error}</p>}
         <button disabled={busy} className={btnPrimary}>{busy ? "Un momento…" : mode === "login" ? "Ingresar" : "Crear cuenta"}</button>
       </form>
+      {mode === "login" && <Link href="/restablecer" className="mt-4 block text-center text-xs uppercase tracking-[0.18em] text-umber underline underline-offset-4">¿Olvidaste tu contraseña?</Link>}
       <button onClick={() => { setMode(mode === "login" ? "register" : "login"); setError(null); }} className="mt-6 w-full text-center text-xs uppercase tracking-[0.18em] text-umber underline underline-offset-4">
         {mode === "login" ? "¿Primera vez? Crear cuenta" : "Ya tengo cuenta"}
       </button>
