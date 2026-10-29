@@ -41,12 +41,13 @@ class OrderSerializer(serializers.ModelSerializer):
     historial = OrderHistorySerializer(many=True, read_only=True)
     pagos = OrderPaymentSerializer(many=True, read_only=True)
     monto_a_cobrar = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
+    por_pagar = serializers.DecimalField(source="amount_due", max_digits=10, decimal_places=2, read_only=True)
 
     class Meta:
         model = Order
         fields = (
             "numero", "token", "estado", "tipo_venta", "subtotal_pen", "envio_pen", "total_pen", "adelanto_pen", "saldo_pen",
-            "monto_a_cobrar", "metodo_entrega", "expira_en", "creado_en", "items", "historial", "pagos",
+            "monto_a_cobrar", "por_pagar", "metodo_entrega", "expira_en", "creado_en", "items", "historial", "pagos",
         )
 
 

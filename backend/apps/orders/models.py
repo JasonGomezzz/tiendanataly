@@ -56,6 +56,25 @@ class Order(models.Model):
         return f"Pedido #{self.pk}"
 
     @property
+    def pagado_total(self):
+        from django.db.models import Sum
+
+        return self.pagos.filter(estado="aprobado").aggregate(t=Sum("monto"))["t"] or Decimal("0")
+
+    @property
+    def saldo_pendiente(self):
+        return max(self.total_pen - self.pagado_total, Decimal("0"))
+
+    def amount_due(self):
+        """Lo que se puede pagar ahora: el cobro inicial, o el saldo de un encargo ya pagado a cuenta."""
+        E = self.Estado
+        if self.estado in (E.PENDIENTE_PAGO, E.EXPIRADO):
+            return max(self.monto_a_cobrar - self.pagado_total, Decimal("0"))
+        if self.tipo_venta == "por_encargo" and self.estado in (E.PAGADO, E.COMPRADO, E.EN_CAMINO, E.EN_LIMA):
+            return self.saldo_pendiente
+        return Decimal("0")
+
+    @property
     def monto_a_cobrar(self):
         """Lo que hay que pagar para pasar a PAGADO: adelanto en pre-order, total en stock local."""
         return self.adelanto_pen if self.tipo_venta == "por_encargo" and self.adelanto_pen else self.total_pen
