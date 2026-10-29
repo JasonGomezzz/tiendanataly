@@ -6,7 +6,7 @@ from apps.core.audit import log_action
 from apps.core.models import AuditLog
 
 from . import services
-from .models import Payment, PaymentEvent
+from .models import BankAccount, Payment, PaymentEvent
 
 
 @admin.register(Payment)
@@ -62,3 +62,9 @@ class PaymentEventAdmin(admin.ModelAdmin):
 
     def has_delete_permission(self, request, obj=None):
         return False
+
+
+@admin.register(BankAccount)
+class BankAccountAdmin(AuditedAdminMixin, admin.ModelAdmin):
+    list_display = ("banco", "etiqueta", "numero", "cci", "titular", "activa", "orden")
+    list_filter = ("banco", "activa")

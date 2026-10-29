@@ -30,7 +30,7 @@ from apps.inventory import services as stock
 from apps.orders import services as order_services
 from apps.orders.models import Order
 from apps.payments import services as payment_services
-from apps.payments.models import Payment
+from apps.payments.models import BankAccount, Payment
 from apps.pricing.services import PricingError, calculate_price
 
 LOW_STOCK = 1
@@ -78,7 +78,7 @@ class MeStaffView(StaffView):
 
     def get(self, request):
         u = request.user
-        perms = ["catalog.add_product", "catalog.change_product", "catalog.ver_finanzas", "payments.view_payment", "payments.change_payment", "core.change_storesettings", "core.view_auditlog", "core.add_exchangerate", "orders.change_order"]
+        perms = ["payments.change_bankaccount", "catalog.add_product", "catalog.change_product", "catalog.ver_finanzas", "payments.view_payment", "payments.change_payment", "core.change_storesettings", "core.view_auditlog", "core.add_exchangerate", "orders.change_order"]
         return Response({
             "id": u.pk, "email": u.email, "nombre": u.get_full_name() or u.get_username(),
             "rol": "superusuario" if u.is_superuser else ("administradora" if u.groups.filter(name=ADMINISTRADORA).exists() else "staff"),
@@ -552,3 +552,41 @@ class AuditLogView(StaffView):
             {"id": a.pk, "fecha": a.creado_en, "usuario": a.usuario.get_username() if a.usuario else None, "accion": a.accion, "modelo": a.modelo, "objeto": a.objeto_repr, "cambios": a.cambios}
             for a in rows
         ])
+
+
+class BankAccountSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BankAccount
+        fields = ("id", "banco", "etiqueta", "numero", "cci", "titular", "activa", "orden")
+
+
+class BankAccountListView(StaffView):
+    perm_map = {"GET": ["payments.view_bankaccount"], "POST": ["payments.add_bankaccount"]}
+
+    def get(self, request):
+        return Response(BankAccountSerializer(BankAccount.objects.all(), many=True).data)
+
+    def post(self, request):
+        s = BankAccountSerializer(data=request.data)
+        s.is_valid(raise_exception=True)
+        account = s.save()
+        audit(request, AuditLog.Accion.CREAR, account)
+        return Response(BankAccountSerializer(account).data, status=status.HTTP_201_CREATED)
+
+
+class BankAccountDetailView(StaffView):
+    perm_map = {"PATCH": ["payments.change_bankaccount"], "DELETE": ["payments.delete_bankaccount"]}
+
+    def patch(self, request, pk):
+        account = get_object_or_404(BankAccount, pk=pk)
+        s = BankAccountSerializer(account, data=request.data, partial=True)
+        s.is_valid(raise_exception=True)
+        s.save()
+        audit(request, AuditLog.Accion.EDITAR, account, campos=sorted(s.validated_data.keys()))
+        return Response(s.data)
+
+    def delete(self, request, pk):
+        account = get_object_or_404(BankAccount, pk=pk)
+        audit(request, AuditLog.Accion.ELIMINAR, account)
+        account.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)

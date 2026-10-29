@@ -1,0 +1,14 @@
+# Plantilla de datos reales del negocio. Copia este archivo a seed/negocio.local.yaml (NO se sube a git)
+# y complétalo. Se carga con:  python manage.py load_business_data
+# También se puede editar todo desde el panel /admin → Ajustes.
+
+tienda:
+  whatsapp: "51999999999"      # con código de país, sin +
+  yape_numero: "999999999"
+  yape_titular: "Nombre de la titular"
+  plin_numero: "999999999"
+  plin_titular: "Nombre de la titular"
+
+cuentas:
+  - {banco: bcp, etiqueta: "Cuenta de ahorros soles", numero: "00000000000000", cci: "00000000000000000000", titular: "Nombre de la titular", orden: 1}
+  - {banco: interbank, etiqueta: "Cuenta simple soles", numero: "0000000000000", cci: "00000000000000000000", titular: "Nombre de la titular", orden: 2}

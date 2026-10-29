@@ -22,8 +22,9 @@ MAX_W = 1200
 # archivo (parte del nombre) -> (slug destino, n.º de foto, caja del producto en fracciones x0,y0,x1,y1)
 # Las cajas se ajustaron mirando cada foto; "region" delimita el área válida (sin barras negras).
 PHOTOS = [
-    ("2.48.02 PM", "bandolero-cuadrado", 1, (0.12, 0.19, 0.97, 0.66), None),
-    ("9.00.41 PM", "bandolero-cuadrado", 2, (0.03, 0.38, 0.97, 0.66), (0, 0.19, 1, 0.81)),
+    ("2.48.02 PM", "bandolero-cuadrado-blanco", 1, (0.12, 0.19, 0.97, 0.66), None),
+    ("9.00.41 PM", "bandolero-cuadrado-negro", 1, (0.03, 0.38, 0.97, 0.66), (0, 0.19, 1, 0.81)),
+    ("pink-pineapple", "splash-pink-pineapple", 1, (0.18, 0.345, 0.66, 0.72), (0, 0.345, 1, 0.82)),
     ("5.35.24 PM", "bolso-corazon-rojo", 1, (0.03, 0.36, 0.97, 0.68), (0, 0.225, 1, 0.78)),
     ("8.16.05 PM (4)", "bolso-corazon-negro-brillos", 1, (0.12, 0.12, 0.95, 0.72), None),
     ("8.16.05 PM (5)", "bolso-corazon-plateado-monograma", 1, (0.28, 0.0, 0.92, 0.66), None),
@@ -85,7 +86,8 @@ def enhance(img):
 
 def main(src):
     src = Path(src)
-    files = list(src.glob("*.jp*g")) + list(src.glob("*.jfif"))
+    originales = Path(__file__).resolve().parent.parent / "seed" / "originales"
+    files = list(src.glob("*.jp*g")) + list(src.glob("*.jfif")) + list(originales.glob("*.*"))
     OUT.mkdir(parents=True, exist_ok=True)
     for token, slug, n, box, region, *extra in PHOTOS:
         match = [f for f in files if token in f.name and (token != "2.48.42 PM.jpeg" or "(1)" not in f.name)]

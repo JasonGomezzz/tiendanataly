@@ -65,5 +65,7 @@ urlpatterns = [
     path("admin/orders/<int:pk>/transition/", staff_api.OrderTransitionView.as_view()),
     path("admin/payments/<int:pk>/<str:action>/", staff_api.PaymentActionView.as_view()),
     path("admin/audit-log/", staff_api.AuditLogView.as_view()),
+    path("admin/bank-accounts/", staff_api.BankAccountListView.as_view()),
+    path("admin/bank-accounts/<int:pk>/", staff_api.BankAccountDetailView.as_view()),
     path("", include(router.urls)),
 ]

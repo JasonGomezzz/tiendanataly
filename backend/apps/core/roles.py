@@ -33,6 +33,7 @@ ROLE_PERMISSIONS = {
         ("orders", "orderstatushistory"): VER,
         ("payments", "payment"): VER_EDITAR,
         ("payments", "paymentevent"): VER,
+        ("payments", "bankaccount"): CRUD,
         ("accounts", "customer"): VER_EDITAR,
         ("accounts", "address"): VER,
         ("accounts", "consent"): VER,

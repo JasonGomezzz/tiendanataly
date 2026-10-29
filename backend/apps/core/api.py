@@ -25,6 +25,12 @@ class ScopedThrottleMixin:
 class PublicStoreSettingsSerializer(serializers.ModelSerializer):
     payments_provider = serializers.SerializerMethodField()
     culqi_public_key = serializers.SerializerMethodField()
+    cuentas = serializers.SerializerMethodField()
+
+    def get_cuentas(self, obj):
+        from apps.payments.models import BankAccount
+
+        return list(BankAccount.objects.filter(activa=True).values("id", "banco", "etiqueta", "numero", "cci", "titular"))
 
     def get_payments_provider(self, obj):
         from django.conf import settings
@@ -42,7 +48,7 @@ class PublicStoreSettingsSerializer(serializers.ModelSerializer):
         model = StoreSettings
         fields = (
             "nombre_tienda", "whatsapp", "aviso_legal", "costo_envio_default", "pct_adelanto",
-            "minutos_reserva", "yape_numero", "yape_titular", "plin_numero", "plin_titular", "payments_provider", "culqi_public_key",
+            "minutos_reserva", "yape_numero", "yape_titular", "plin_numero", "plin_titular", "payments_provider", "culqi_public_key", "cuentas",
         )
 
 

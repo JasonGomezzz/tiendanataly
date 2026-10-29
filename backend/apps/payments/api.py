@@ -24,7 +24,8 @@ from .webhooks import InvalidEvent, process_event
 
 class ManualPaymentSerializer(serializers.Serializer):
     comprobante = serializers.ImageField(validators=[validate_image_file])
-    metodo = serializers.ChoiceField(choices=[Payment.Metodo.YAPE, Payment.Metodo.PLIN])
+    metodo = serializers.ChoiceField(choices=[Payment.Metodo.YAPE, Payment.Metodo.PLIN, Payment.Metodo.TRANSFERENCIA])
+    banco = serializers.CharField(max_length=40, required=False, allow_blank=True, default="")
     idempotency_key = serializers.CharField(max_length=60, required=False)
 
 
@@ -46,6 +47,9 @@ class ManualPaymentView(CsrfProtectedMixin, ScopedThrottleMixin, APIView):
         payment = get_provider("manual_yape_plin").create_payment(
             order, idempotency_key=key, metodo=s.validated_data["metodo"], comprobante=s.validated_data["comprobante"],
         )
+        if s.validated_data["metodo"] == Payment.Metodo.TRANSFERENCIA and s.validated_data["banco"] and not payment.nota:
+            payment.nota = f"Transferencia {s.validated_data['banco']}"[:255]
+            payment.save(update_fields=["nota", "actualizado_en"])
         enqueue("payment.proof_uploaded", {"pedido": order.pk, "pago": payment.pk, "monto": str(payment.monto)})
         return Response({"estado": payment.estado, "monto": str(payment.monto)}, status=status.HTTP_201_CREATED)
 

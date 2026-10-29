@@ -75,6 +75,8 @@ productos:
     marca: pink
     categoria: mochilas
     descripcion: Mochila de nylon con solapa con hebilla y 2 bolsillos frontales.
+    precio_venta_pen: 85
+    estado: publicado
     orden: 5
     variantes:
       - {sku: PK-MRD-01, nombre: Rosa, atributo: color, stock: 1}
@@ -117,7 +119,8 @@ productos:
     categoria: fragancias
     linea: Fragrance mist 250 ml
     descripcion: Body splash (fragrance mist) Bare Vanilla.
-    notas_internas: "PENDIENTE: confirmar si es la versión normal o shimmer."
+    precio_venta_pen: 50
+    notas_internas: "PENDIENTE: foto propia y confirmar si es la versión normal o shimmer (en la estantería hay de las dos)."
     orden: 8
     variantes:
       - {sku: VS-SBV-01, nombre: Única, atributo: unico, stock: 2}
@@ -129,23 +132,34 @@ productos:
     descripcion: Crema corporal con fragancia Cucumber.
     precio_venta_pen: 40
     notas_internas: >-
-      PENDIENTE: fue anotada como "cúrcuma" pero las fotos muestran envases que dicen CUCUMBER.
-      Confirmar nombre exacto, marca y línea antes de publicar.
+      NO SE PROMOCIONA por ahora (sin foto propia). Fue anotada como "cúrcuma" pero las fotos muestran
+      envases que dicen CUCUMBER. Confirmar nombre exacto, marca y línea antes de publicar.
     orden: 9
     variantes:
       - {sku: CRC-CU-01, nombre: Única, atributo: unico, stock: 2}
 
-  - slug: bandolero-cuadrado
-    nombre: Bandolero cuadrado
+  - slug: bandolero-cuadrado-negro
+    nombre: Bandolero cuadrado negro
     marca: victorias-secret
     categoria: bolsos
-    descripcion: Bandolero cuadrado con correa ajustable. Disponible en negro (acolchado en V) y blanco.
-    notas_internas: "PENDIENTE: confirmar nombre comercial, materiales y medidas. Precio S/ 130 confirmado para el negro; se asumió el mismo para el blanco (confirmar)."
+    descripcion: Bandolero cuadrado negro acolchado en V, con cadena dorada y correa ajustable.
+    notas_internas: "PENDIENTE: confirmar nombre comercial, materiales y medidas."
     precio_venta_pen: 130
     estado: publicado
     orden: 10
     variantes:
       - {sku: VS-BCU-NG, nombre: Negro, atributo: color, stock: 1}
+
+  - slug: bandolero-cuadrado-blanco
+    nombre: Bandolero cuadrado blanco
+    marca: victorias-secret
+    categoria: bolsos
+    descripcion: Bandolero cuadrado blanco perforado con el monograma VS, con cadena dorada y correa ajustable.
+    notas_internas: "PENDIENTE: confirmar nombre comercial, materiales y medidas."
+    precio_venta_pen: 120
+    estado: publicado
+    orden: 11
+    variantes:
       - {sku: VS-BCU-BL, nombre: Blanco, atributo: color, stock: 1}
 
   - slug: set-4-splash
@@ -222,7 +236,8 @@ productos:
     categoria: fragancias
     linea: Fragrance mist 250 ml
     descripcion: Body splash (fragrance mist) Midnight Marshmallow de Victoria's Secret. También existe en loción.
-    notas_internas: "PENDIENTE: precio, cantidad en stock y si se vende también la loción (236 ml). La oferta 2 por S/ 90 aplica SOLO al splash línea clásica."
+    precio_venta_pen: 50
+    notas_internas: "PENDIENTE: cantidad en stock y si se vende también la loción (236 ml). La oferta 2 por S/ 90 aplica SOLO al splash línea clásica."
     orden: 17
     variantes:
       - {sku: VS-MMM-01, nombre: Única, atributo: unico, stock: 0}
@@ -233,7 +248,20 @@ productos:
     categoria: fragancias
     linea: Fragrance mist 250 ml
     descripcion: Body splash (fragrance mist) Piña Tropicale de Victoria's Secret. También existe en loción.
-    notas_internas: "PENDIENTE: precio, cantidad en stock y si se vende también la loción (236 ml). La oferta 2 por S/ 90 aplica SOLO al splash línea clásica."
+    precio_venta_pen: 45
+    notas_internas: "PENDIENTE: cantidad en stock y si se vende también la loción (236 ml). La oferta 2 por S/ 90 aplica SOLO al splash línea clásica."
     orden: 18
     variantes:
       - {sku: VS-PTR-01, nombre: Única, atributo: unico, stock: 0}
+
+  - slug: splash-pink-pineapple
+    nombre: Splash PINK Pineapple
+    marca: pink
+    categoria: fragancias
+    linea: Spritz mist hair & body 236 ml
+    descripcion: Spritz de cabello y cuerpo PINK Pineapple (236 ml).
+    precio_venta_pen: 45
+    notas_internas: "PENDIENTE: cantidad en stock."
+    orden: 19
+    variantes:
+      - {sku: PK-PIN-01, nombre: Única, atributo: unico, stock: 0}
