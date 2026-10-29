@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { CartDrawer } from "@/components/CartDrawer";
 import { CartProvider } from "@/components/CartProvider";
@@ -26,6 +27,7 @@ export default async function ShopLayout({ children }: { children: React.ReactNo
       <footer className="mt-24 border-t border-stone/30 bg-paper px-4 py-12 text-sm text-umber sm:px-8">
         <div className="mx-auto grid max-w-7xl gap-8 sm:grid-cols-3">
           <div>
+            <Image src="/brand/logo-640.png" alt={name} width={96} height={96} className="mb-3 h-24 w-24 rounded-full" />
             <p className="font-serif text-2xl text-ink">{name}</p>
             <p className="mt-1 text-xs italic">Tu estilo, nuestra inspiración ♡</p>
             <p className="mt-3 max-w-xs text-xs leading-relaxed">{aviso}</p>

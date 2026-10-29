@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE),
   title: { default: `${NAME} · Bolsos, mochilas y fragancias`, template: `%s · ${NAME}` },
   description: "Bolsos, mochilas y fragancias importadas, con entrega en Lima. Paga con Yape, Plin o tarjeta.",
-  openGraph: { type: "website", locale: "es_PE", siteName: NAME },
+  openGraph: { type: "website", locale: "es_PE", siteName: NAME, images: [{ url: "/brand/logo.png", width: 1254, height: 1254, alt: NAME }] },
 };
 
 export const viewport: Viewport = { themeColor: "#ffffff" };

@@ -7,8 +7,6 @@
 
 ## Archivo del logo
 
-El logo oficial se entregó como imagen por el chat y aún no está guardado como archivo en el repo.
-Para activarlo: guardar la imagen como `frontend/public/brand/logo.png` (cuadrada, mínimo 1000 px) y avisar para
-usarla en la cabecera, el favicon, los metadatos Open Graph y los comprobantes.
-
-Mientras tanto la web usa un logotipo provisional en SVG (`frontend/src/components/Logo.tsx`) y un favicon "MF".
+El logo oficial está en `frontend/public/brand/logo.png` (1254 × 1254, original entregado como `LogoNataly.jfif`) y una versión de 640 px
+(`logo-640.png`) para cabecera, pie de página y panel. Se usa también como favicon (`src/app/icon.png`, `apple-icon.png`) y como
+imagen por defecto al compartir enlaces (Open Graph). Los productos usan su propia foto al compartirse.

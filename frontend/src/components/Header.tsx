@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { Logo } from "./Logo";
 import { useCart } from "./CartProvider";
@@ -38,7 +39,8 @@ export function Header({ name }: { name: string }) {
             ))}
           </nav>
         </details>
-        <Link href="/" className="col-start-2 px-2 text-center" aria-label={`${name}, ir al inicio`}>
+        <Link href="/" className="col-start-2 flex items-center gap-3 px-2" aria-label={`${name}, ir al inicio`}>
+          <Image src="/brand/logo-640.png" alt="" width={56} height={56} priority className="h-11 w-11 rounded-full sm:h-14 sm:w-14" />
           <Logo name={name} />
         </Link>
         <div className="col-start-3 flex items-center justify-end gap-1 sm:gap-5">
