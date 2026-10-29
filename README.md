@@ -7,13 +7,15 @@ Monorepo con **Django + DRF + PostgreSQL** (backend), **Next.js (App Router) + T
 
 ## Estado
 
-| Fase | Contenido | Estado |
-|---|---|---|
-| 1. Base | Monorepo, modelos, seed, API base, admin con roles, auth segura, tests | Hecha (pendiente de revisión) |
-| 2. Vitrina | Catálogo, producto, carrito, reserva, WhatsApp, Yape/Plin manual, SEO | Pendiente |
-| 3. Pagos y estados | Culqi (sandbox), webhooks, n8n, pre-order | Pendiente |
-| 4. Panel `/admin` en Next.js | Dashboard y alta de producto desde el celular | Pendiente |
-| 5. Endurecimiento y salida | Carga, backups, despliegue, checklist | Pendiente |
+| Fase | Contenido | Rama | Estado |
+|---|---|---|---|
+| 1. Base | Monorepo, modelos, seed, API base, admin con roles, auth segura, tests | `feat/fase-1-base` | Hecha |
+| 2. Vitrina | Catálogo, producto, bolsa, reserva atómica, WhatsApp, Yape/Plin manual, SEO | `feat/fase-2-vitrina` | Hecha |
+| 3. Pagos y estados | Culqi (sin validar contra sandbox), webhooks verificados, n8n, encargos con adelanto | `feat/fase-3-pagos` | Hecha |
+| 4. Panel `/admin` en Next.js | Dashboard, alta de producto con cámara, calculadora, tablero de pedidos | `feat/fase-4-panel-admin` | Hecha |
+| 5. Endurecimiento y salida | 2FA, IP real tras proxy, CSP, respaldos, CI, carga, compose de producción | `feat/fase-5-salida` | Hecha (ver `docs/checklist-salida.md`) |
+
+Documentación: [despliegue](docs/despliegue.md) · [respaldos](docs/respaldos.md) · [checklist de salida](docs/checklist-salida.md) · [Culqi y n8n](docs/pagos-culqi.md) · [marca](docs/marca.md) · [guía de fotos](docs/guia-fotos.md).
 
 ## Levantar el proyecto
 
@@ -25,6 +27,8 @@ docker compose up --build
 ```
 
 Esto arranca Postgres, Redis, el backend (migra y crea los roles solo), el worker y el beat de Celery, y el frontend.
+
+El panel de la administradora está en `/admin` (login con correo, contraseña y código 2FA). Producción: ver [docs/despliegue.md](docs/despliegue.md) y `docker-compose.prod.yml`.
 
 | Servicio | URL |
 |---|---|
