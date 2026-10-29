@@ -1,0 +1,16 @@
+{% extends "admin/base_site.html" %}
+
+{% block content %}
+<form method="post">
+  {% csrf_token %}
+  <p>Variantes seleccionadas:</p>
+  <ul>
+    {% for v in variants %}<li>{{ v }} — físico {{ v.stock_disponible }}, reservado {{ v.stock_reservado }}</li>{% endfor %}
+  </ul>
+  {{ form.as_p }}
+  <input type="hidden" name="action" value="{{ action_name }}">
+  <input type="hidden" name="apply" value="1">
+  <input type="submit" class="default" value="Aplicar ajuste">
+  <a href="." class="button">Cancelar</a>
+</form>
+{% endblock %}
