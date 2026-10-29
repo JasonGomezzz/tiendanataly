@@ -2,10 +2,12 @@ from django.urls import include, path
 from rest_framework.routers import SimpleRouter
 
 from apps.accounts import views as account_views
+from apps.cart import api as cart_api
 from apps.catalog import api as catalog_api
 from apps.core.api import PublicStoreSettingsView
 from apps.legal.api import ComplaintCreateView
-from apps.orders.api import MyOrderViewSet, TrackOrderView
+from apps.orders.api import CheckoutView, MyOrderViewSet, OrderWhatsappView, TrackOrderView
+from apps.payments.api import ManualPaymentView
 from apps.shipping.api import ShippingZoneViewSet
 
 router = SimpleRouter()
@@ -31,7 +33,14 @@ urlpatterns = [
     path("me/", account_views.MeView.as_view()),
     path("store-settings/public/", PublicStoreSettingsView.as_view()),
     path("variants/<int:variant_id>/stock-alerts/", catalog_api.StockAlertCreateView.as_view()),
+    path("cart/", cart_api.CartView.as_view()),
+    path("cart/items/", cart_api.CartItemsView.as_view()),
+    path("cart/items/<int:pk>/", cart_api.CartItemDetailView.as_view()),
+    path("cart/merge/", cart_api.CartMergeView.as_view()),
+    path("checkout/", CheckoutView.as_view()),
     path("orders/track/<uuid:public_token>/", TrackOrderView.as_view()),
+    path("orders/<uuid:public_token>/whatsapp-message/", OrderWhatsappView.as_view()),
+    path("orders/<uuid:public_token>/payments/manual/", ManualPaymentView.as_view()),
     path("complaints/", ComplaintCreateView.as_view()),
     path("", include(router.urls)),
 ]
