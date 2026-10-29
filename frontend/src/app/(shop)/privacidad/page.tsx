@@ -8,7 +8,7 @@ export default function Privacy() {
     <LegalPage title="Política de privacidad">
       <section>
         <h2>Responsable del tratamiento</h2>
-        <p>La tienda (titular: <strong>[nombre / razón social por confirmar]</strong>) trata tus datos personales conforme a la Ley N.° 29733, Ley de Protección de Datos Personales, y su reglamento.</p>
+        <p>La tienda (titular: <strong>[nombre completo de la titular]</strong>, persona natural) trata tus datos personales conforme a la Ley N.° 29733, Ley de Protección de Datos Personales, y su reglamento.</p>
       </section>
       <section>
         <h2>Qué datos recogemos</h2>

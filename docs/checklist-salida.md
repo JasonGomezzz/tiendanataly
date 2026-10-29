@@ -19,10 +19,12 @@
 - [ ] Superusuario técnico creado; administradora y staff **sin** superusuario; 2FA activado con `enroll_2fa` y códigos de respaldo entregados.
 - [ ] Correo SMTP configurado (recuperar contraseña) y probado.
 - [ ] Respaldo copiado fuera del servidor y restauración probada en el servidor real.
-- [ ] Datos reales: WhatsApp, Yape/Plin (número y titular), tipo de cambio, margen, zonas y costos de envío, precios de todos los productos y reparto de los splash por fragancia.
+- [ ] Datos reales: WhatsApp, Yape/Plin (número y titular), tipo de cambio, margen, zonas y costos de envío, reparto de los splash por fragancia y stock de pañalero, relojes, set de 4 splash y Peach.
+- [x] Precios de venta confirmados: corazón negro S/ 130, corazón rojo S/ 120, plateado S/ 120, pañalero rosado S/ 130, reloj plateado bebe S/ 80, set reloj Aéropostale rosado S/ 100 (cargados en `seed/inventory.yaml`; los 3 bolsos corazón quedan publicados, el resto en borrador hasta tener stock).
+- [ ] Precios pendientes: mochila negra, mochila rosa, set de 3 perfumes, splash clásica, splash vainilla, crema Cucumber, bandolero cuadrado, set de 4 splash y Peach.
 - [ ] Fotos finales de producto (ver `docs/guia-fotos.md`) y logo oficial (`frontend/public/brand/logo.png`, ver `docs/marca.md`).
 - [ ] **Textos legales** revisados con un asesor: términos, privacidad (Ley 29733), cambios y devoluciones, **Libro de Reclamaciones** (verificar los requisitos vigentes de Indecopi para venta online y completar razón social/RUC en Ajustes).
-- [ ] Definir si la dueña vende con RUC o como persona natural y qué comprobante emite (la facturación electrónica queda fuera de alcance; los campos RUC/DNI ya existen).
+- [x] Decidido: la dueña vende como **persona natural sin RUC**. Pendiente: poner su nombre completo y DNI como titular en términos, privacidad y Libro de Reclamaciones (textos marcados con corchetes). Ojo: una actividad comercial habitual suele requerir inscribirse en SUNAT (RUC y régimen), y es probable que Culqi y otras pasarelas lo pidan para abrir la cuenta; confírmalo con un contador antes de depender de la pasarela. La facturación electrónica sigue fuera de alcance (los campos RUC/DNI ya existen).
 - [ ] Probar un pedido completo real: Yape/Plin con comprobante → aprobación en el panel → entrega.
 - [ ] Alta en Google Search Console con el `sitemap.xml`; revisar la vista previa al compartir un producto en WhatsApp/Instagram.
 

@@ -8,7 +8,7 @@ export default function Terms() {
     <LegalPage title="Términos y condiciones">
       <section>
         <h2>Quiénes somos</h2>
-        <p>Tienda independiente de importación y venta de bolsos, mochilas y fragancias con entrega en Lima, Perú. No estamos afiliados a Victoria&apos;s Secret ni a otras marcas; sus nombres se usan solo para identificar los productos que vendemos. Razón social / RUC: <strong>[por confirmar]</strong>.</p>
+        <p>Tienda independiente de importación y venta de bolsos, mochilas y fragancias con entrega en Lima, Perú. No estamos afiliados a Victoria&apos;s Secret ni a otras marcas; sus nombres se usan solo para identificar los productos que vendemos. Titular: <strong>[nombre completo de la titular]</strong>, persona natural sin RUC, Lima, Perú.</p>
       </section>
       <section>
         <h2>Precios y pagos</h2>
