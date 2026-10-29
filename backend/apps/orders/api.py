@@ -8,6 +8,7 @@ from rest_framework.views import APIView
 
 from apps.cart.api import get_cart
 from apps.core.api import CsrfProtectedMixin, ScopedThrottleMixin
+from apps.core.ip import client_ip
 from apps.payments.models import Payment
 from apps.shipping.models import ShippingZone
 
@@ -135,7 +136,7 @@ class CheckoutView(CsrfProtectedMixin, ScopedThrottleMixin, APIView):
         s.is_valid(raise_exception=True)
         cart = get_cart(request)
         try:
-            order = create_order_from_cart(cart, s.validated_data, user=request.user, ip=request.META.get("REMOTE_ADDR"))
+            order = create_order_from_cart(cart, s.validated_data, user=request.user, ip=client_ip(request))
         except CheckoutError as exc:
             return Response({"detail": str(exc), "code": exc.code}, status=exc.status)
         order = Order.objects.prefetch_related("items", "historial", "pagos").get(pk=order.pk)

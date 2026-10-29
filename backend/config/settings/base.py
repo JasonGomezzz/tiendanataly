@@ -167,6 +167,10 @@ AXES_FAILURE_LIMIT = 5
 AXES_COOLOFF_TIME = timedelta(minutes=15)
 AXES_LOCKOUT_PARAMETERS = [["ip_address", "username"]]
 AXES_RESET_ON_SUCCESS = True
+# Detrás de Caddy todos llegarían con la IP del proxy y un atacante bloquearía a todas las clientas:
+# se usa la IP real (ver apps/core/ip.py).
+BEHIND_PROXY = env.bool("BEHIND_PROXY", default=False)
+AXES_CLIENT_IP_CALLABLE = "apps.core.ip.client_ip"
 
 # --- DRF --------------------------------------------------------------------
 REST_FRAMEWORK = {
@@ -188,6 +192,7 @@ REST_FRAMEWORK = {
         "rest_framework.throttling.AnonRateThrottle",
         "rest_framework.throttling.UserRateThrottle",
     ],
+    "NUM_PROXIES": 1 if env.bool("BEHIND_PROXY", default=False) else 0,
     "DEFAULT_THROTTLE_RATES": {
         "anon": "120/min",
         "user": "240/min",
@@ -222,6 +227,8 @@ REVALIDATE_SECRET = env("REVALIDATE_SECRET", default="")
 N8N_WEBHOOK_URL = env("N8N_WEBHOOK_URL", default="")
 N8N_WEBHOOK_SECRET = env("N8N_WEBHOOK_SECRET", default="")
 SEED_DIR = Path(env("SEED_DIR", default="/seed"))
+# Sirve /media desde Django (el optimizador de imágenes de Next lo pide por dentro). Caddy los sirve al público.
+SERVE_MEDIA = env.bool("SERVE_MEDIA", default=False)
 
 # IGV vigente en Perú, usado al calcular comisiones de pasarela.
 IGV_RATE = "0.18"

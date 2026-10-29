@@ -1,10 +1,11 @@
+from .ip import client_ip
 from .models import AuditLog
 
 SENSITIVE = ("password", "token", "secret", "key")
 
 
 def _client_ip(request):
-    return request.META.get("REMOTE_ADDR") or None
+    return client_ip(request)
 
 
 def _clean(changes):

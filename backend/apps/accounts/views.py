@@ -17,6 +17,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from apps.core.api import CsrfProtectedMixin, ScopedThrottleMixin
+from apps.core.ip import client_ip
 
 from .models import Consent, Customer
 from .serializers import (
@@ -32,7 +33,7 @@ User = get_user_model()
 
 
 def _client_ip(request):
-    return request.META.get("REMOTE_ADDR") or None
+    return client_ip(request)
 
 
 @method_decorator(ensure_csrf_cookie, name="dispatch")
