@@ -11,7 +11,7 @@ import { SITE } from "@/lib/format";
 const serif = Cormorant_Garamond({ subsets: ["latin"], weight: ["400", "600"], variable: "--font-cormorant", display: "swap" });
 const sans = Jost({ subsets: ["latin"], variable: "--font-jost", display: "swap" });
 
-const NAME = process.env.NEXT_PUBLIC_STORE_NAME ?? "Tienda Nataly";
+const NAME = process.env.NEXT_PUBLIC_STORE_NAME ?? "Marle Fashion";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE),

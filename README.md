@@ -1,4 +1,4 @@
-# Tienda Nataly
+# Marle Fashion
 
 Tienda web de importación y venta de bolsos, mochilas y fragancias para un negocio familiar en Lima.
 Monorepo con **Django + DRF + PostgreSQL** (backend), **Next.js (App Router) + TypeScript + Tailwind** (frontend), Celery + Redis para tareas, y Docker Compose para desarrollo.

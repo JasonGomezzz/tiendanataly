@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { Logo } from "./Logo";
 import { useCart } from "./CartProvider";
 
 const NAV = [
@@ -37,8 +38,8 @@ export function Header({ name }: { name: string }) {
             ))}
           </nav>
         </details>
-        <Link href="/" className="col-start-2 text-center font-serif text-3xl tracking-wide sm:text-4xl">
-          {name}
+        <Link href="/" className="col-start-2 px-2 text-center" aria-label={`${name}, ir al inicio`}>
+          <Logo name={name} />
         </Link>
         <div className="col-start-3 flex items-center justify-end gap-1 sm:gap-5">
           <Link href="/buscar" className={`${linkClass} flex h-11 items-center px-2`}>
