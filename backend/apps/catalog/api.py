@@ -4,6 +4,7 @@ from django.db.models.functions import Coalesce
 from rest_framework import serializers, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.generics import CreateAPIView, get_object_or_404
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import AllowAny, IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 
@@ -127,10 +128,17 @@ class ProductFilter(django_filters.FilterSet):
         return low if value else queryset.exclude(pk__in=low.values("pk"))
 
 
+class CatalogPagination(PageNumberPagination):
+    page_size = 24
+    page_size_query_param = "page_size"
+    max_page_size = 200
+
+
 class ProductViewSet(viewsets.ReadOnlyModelViewSet):
     """Catálogo público: solo productos publicados o agotados con precio. Nunca expone costos."""
 
     permission_classes = [AllowAny]
+    pagination_class = CatalogPagination
     lookup_field = "slug"
     filterset_class = ProductFilter
     search_fields = ["nombre", "descripcion", "marca__nombre", "linea"]
