@@ -193,14 +193,15 @@ REST_FRAMEWORK = {
         "rest_framework.throttling.UserRateThrottle",
     ],
     "NUM_PROXIES": 1 if env.bool("BEHIND_PROXY", default=False) else 0,
+    # Límites por IP. Se pueden subir por entorno solo para pruebas de carga (THROTTLE_<NOMBRE>=1000/min).
     "DEFAULT_THROTTLE_RATES": {
-        "anon": "120/min",
-        "user": "240/min",
-        "login": "10/min",
-        "register": "5/min",
-        "password_reset": "5/hour",
-        "checkout": "10/min",
-        "complaint": "5/hour",
+        "anon": env("THROTTLE_ANON", default="120/min"),
+        "user": env("THROTTLE_USER", default="240/min"),
+        "login": env("THROTTLE_LOGIN", default="10/min"),
+        "register": env("THROTTLE_REGISTER", default="5/min"),
+        "password_reset": env("THROTTLE_PASSWORD_RESET", default="5/hour"),
+        "checkout": env("THROTTLE_CHECKOUT", default="10/min"),
+        "complaint": env("THROTTLE_COMPLAINT", default="5/hour"),
     },
 }
 
@@ -212,6 +213,15 @@ CELERY_TASK_ALWAYS_EAGER = False
 
 # --- Negocio ----------------------------------------------------------------
 STORE_NAME = env("STORE_NAME", default="Marle Fashion")
+SITE_URL = env("NEXT_PUBLIC_SITE_URL", default="http://localhost:3000").rstrip("/")
+
+# Correo (recuperar contraseña). En desarrollo se imprime en consola.
+EMAIL_HOST = env("EMAIL_HOST", default="")
+EMAIL_PORT = env.int("EMAIL_PORT", default=587)
+EMAIL_HOST_USER = env("EMAIL_HOST_USER", default="")
+EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD", default="")
+EMAIL_USE_TLS = env.bool("EMAIL_USE_TLS", default=True)
+DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL", default="Marle Fashion <no-responder@localhost>")
 STORE_WHATSAPP = env("STORE_WHATSAPP", default="")
 PAYMENTS_PROVIDER = env("PAYMENTS_PROVIDER", default="manual_yape_plin")
 # Culqi. La clave secreta solo vive en el backend. CULQI_API_BASE y la unidad del monto (céntimos)
