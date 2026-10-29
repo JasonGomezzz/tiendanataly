@@ -30,8 +30,10 @@ PHOTOS = [
     ("9.01.28 PM", "mochila-negra-acolchada", 1, (0.25, 0.05, 0.82, 0.78), None),
     ("2.48.43 PM", "mochila-pink-deportiva", 1, (0.15, 0.20, 0.95, 0.72), None),
     ("8.16.05 PM (2)", "set-mini-eau-de-parfum-bombshell", 1, (0.20, 0.06, 0.94, 0.74), None),
-    ("2.48.42 PM.jpeg", "set-4-splash", 1, (0.02, 0.20, 0.96, 0.68), None),
-    ("8.16.05 PM (3)", "splash-clasica", 1, (0.0, 0.04, 1.0, 0.78), None),
+    ("df62745e", "set-4-splash", 1, (0.02, 0.2, 0.96, 0.7), None),
+    ("perfumenataly", "splash-clasica", 1, (0.0, 0.1, 1.0, 0.85), None),
+    ("victoriasecretmorado", "splash-midnight-marshmallow", 1, (0.30, 0.20, 0.75, 0.68), None),
+    ("perfumenatalydorado", "splash-pina-tropicale", 1, (0.28, 0.15, 0.88, 0.78), None),
     ("9.02.59 PM", "set-reloj-aeropostale-rosado", 1, (0.05, 0.06, 0.98, 0.78), None),
     ("9.03.10 PM", "reloj-bebe-plateado", 1, (0.02, 0.2, 0.98, 0.8), (0, 0.14, 1, 0.86)),
     ("9.03.16 PM", "panalero-rosado-juicy", 1, (0.02, 0.08, 0.98, 0.78), None),
@@ -83,7 +85,7 @@ def enhance(img):
 
 def main(src):
     src = Path(src)
-    files = list(src.glob("*.jp*g"))
+    files = list(src.glob("*.jp*g")) + list(src.glob("*.jfif"))
     OUT.mkdir(parents=True, exist_ok=True)
     for token, slug, n, box, region, *extra in PHOTOS:
         match = [f for f in files if token in f.name and (token != "2.48.42 PM.jpeg" or "(1)" not in f.name)]

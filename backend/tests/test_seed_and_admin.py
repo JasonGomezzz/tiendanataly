@@ -36,6 +36,8 @@ EXPECTED_STOCK = {
     "reloj-bebe-plateado": 0,  # cantidad pendiente
     "set-reloj-aeropostale-rosado": 0,  # cantidad pendiente
     "set-guess-red": 0,  # cantidad pendiente
+    "splash-midnight-marshmallow": 0,  # cantidad pendiente
+    "splash-pina-tropicale": 0,  # cantidad pendiente
 }
 
 
@@ -59,12 +61,13 @@ PRECIOS_CONFIRMADOS = {
     "crema-corporal-cucumber": 40,
     "splash-clasica": 50,
     "set-guess-red": 180,
+    "set-4-splash": 75,
 }
 
 
 def test_seed_carga_los_precios_confirmados_y_publica_solo_lo_completo():
     call_command("seed_inventory", dir=str(SEED), verbosity=0)
-    assert Product.objects.count() == 16
+    assert Product.objects.count() == 18
     for slug, price in PRECIOS_CONFIRMADOS.items():
         assert Product.objects.get(slug=slug).precio_venta_pen == price, slug
     # Sin costos cargados: la administradora los completa con la calculadora.
@@ -93,7 +96,7 @@ def test_seed_es_idempotente_y_el_stock_audita_limpio():
     call_command("seed_inventory", dir=str(SEED), verbosity=0)
     movements = InventoryMovement.objects.count()
     call_command("seed_inventory", dir=str(SEED), verbosity=0)
-    assert Product.objects.count() == 16
+    assert Product.objects.count() == 18
     assert InventoryMovement.objects.count() == movements
     assert stock.audit_stock() == []
 
@@ -103,6 +106,8 @@ def test_seed_carga_las_fotos_disponibles_y_marca_las_que_faltan():
     assert not Product.objects.get(slug="bolso-corazon-rojo").sin_imagen
     assert Product.objects.get(slug="bandolero-cuadrado").imagenes.count() == 2
     assert Product.objects.get(slug="splash-bare-vanilla").sin_imagen
+    for slug in ("splash-clasica", "splash-midnight-marshmallow", "splash-pina-tropicale"):
+        assert not Product.objects.get(slug=slug).sin_imagen, slug
 
 
 def test_la_crema_no_se_llama_curcuma_ni_queda_con_marca_inventada():
