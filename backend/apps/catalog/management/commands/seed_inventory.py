@@ -9,6 +9,7 @@ from django.db import transaction
 from apps.catalog.models import Brand, Category, Product, ProductImage, ProductVariant
 from apps.core.models import StoreSettings
 from apps.inventory import services as stock
+from apps.shipping.models import ShippingZone
 
 IMAGE_EXTENSIONS = (".jpg", ".jpeg", ".png", ".webp")
 
@@ -39,6 +40,11 @@ class Command(BaseCommand):
         seed_dir = self._seed_dir(options["dir"])
         data = yaml.safe_load((seed_dir / "inventory.yaml").read_text(encoding="utf-8"))
         StoreSettings.load()
+
+        # Zonas de envío PLACEHOLDER (costos por confirmar); solo se crean si no hay ninguna.
+        if not ShippingZone.objects.exists():
+            for zone in data.get("zonas_envio", []):
+                ShippingZone.objects.create(**zone)
 
         for c in data["categorias"]:
             Category.objects.update_or_create(slug=c["slug"], defaults={"nombre": c["nombre"], "orden": c.get("orden", 0)})

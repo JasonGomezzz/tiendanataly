@@ -14,6 +14,12 @@ marcas:
   - {nombre: PINK, slug: pink}
   - {nombre: Por confirmar, slug: por-confirmar}
 
+# PLACEHOLDER: costos y cobertura por confirmar con la administradora. Se editan en el admin.
+zonas_envio:
+  - {nombre: Delivery en Lima, metodo: delivery_lima, costo: 10, cobertura: "Lima Metropolitana (por confirmar)", orden: 1}
+  - {nombre: Recojo en punto de encuentro, metodo: recojo, costo: 0, instrucciones: "Punto de recojo por confirmar.", orden: 2}
+  - {nombre: Envío a provincias, metodo: courier_provincia, costo: 20, courier: "Por confirmar", cobertura: "Todo el Perú", orden: 3}
+
 productos:
   - slug: bolso-corazon-rojo
     nombre: Bolso corazón rojo
