@@ -8,11 +8,15 @@ categorias:
   - {nombre: Mochilas, slug: mochilas, orden: 2}
   - {nombre: Fragancias, slug: fragancias, orden: 3}
   - {nombre: Cuidado corporal, slug: cuidado-corporal, orden: 4}
+  - {nombre: Relojes y accesorios, slug: relojes-accesorios, orden: 5}
 
 marcas:
   - {nombre: "Victoria's Secret", slug: victorias-secret}
   - {nombre: PINK, slug: pink}
   - {nombre: Por confirmar, slug: por-confirmar}
+  - {nombre: Juicy Couture, slug: juicy-couture}
+  - {nombre: bebe, slug: bebe}
+  - {nombre: Aéropostale, slug: aeropostale}
 
 # PLACEHOLDER: costos y cobertura por confirmar con la administradora. Se editan en el admin.
 zonas_envio:
@@ -26,6 +30,8 @@ productos:
     marca: victorias-secret
     categoria: bolsos
     descripcion: Bolso crossbody en forma de corazón con cadena dorada y correa larga ajustable.
+    precio_venta_pen: 120
+    estado: publicado
     orden: 1
     variantes:
       - {sku: VS-BCR-01, nombre: Rojo, atributo: color, stock: 4}
@@ -35,6 +41,8 @@ productos:
     marca: victorias-secret
     categoria: bolsos
     descripcion: Bolso en forma de corazón con cristales (strass) y herrajes plateados.
+    precio_venta_pen: 130
+    estado: publicado
     orden: 2
     variantes:
       - {sku: VS-BCN-01, nombre: Negro con brillos, atributo: color, stock: 2}
@@ -44,6 +52,8 @@ productos:
     marca: victorias-secret
     categoria: bolsos
     descripcion: Bolso en forma de corazón con strass en patrón de monograma y herrajes plateados.
+    precio_venta_pen: 120
+    estado: publicado
     orden: 3
     variantes:
       - {sku: VS-BCP-01, nombre: Plateado, atributo: color, stock: 2}
@@ -148,3 +158,36 @@ productos:
     orden: 12
     variantes:
       - {sku: SPL-PCH-01, nombre: Única, atributo: unico, stock: 0}
+
+  - slug: panalero-rosado-juicy
+    nombre: Pañalero rosado Juicy Couture
+    marca: juicy-couture
+    categoria: bolsos
+    descripcion: Bolso pañalero rosado con logo en relieve, asas y bolsillos laterales.
+    precio_venta_pen: 130
+    notas_internas: "PENDIENTE: cantidad en stock, medidas y si incluye cambiador. Precio de venta confirmado: S/ 130."
+    orden: 13
+    variantes:
+      - {sku: JC-PAN-01, nombre: Rosado, atributo: color, stock: 0}
+
+  - slug: reloj-bebe-plateado
+    nombre: Reloj plateado bebe
+    marca: bebe
+    categoria: relojes-accesorios
+    descripcion: Reloj plateado con detalles de cristales, en estuche con accesorios.
+    precio_venta_pen: 80
+    notas_internas: "PENDIENTE: cantidad en stock y qué accesorios incluye el estuche. Precio de venta confirmado: S/ 80."
+    orden: 14
+    variantes:
+      - {sku: BB-REL-01, nombre: Plateado, atributo: color, stock: 0}
+
+  - slug: set-reloj-aeropostale-rosado
+    nombre: Set reloj Aéropostale rosado
+    marca: aeropostale
+    categoria: relojes-accesorios
+    descripcion: Reloj rosado con cristales y pulseras a juego, en estuche.
+    precio_venta_pen: 100
+    notas_internas: "PENDIENTE: cantidad en stock. Precio de venta confirmado: S/ 100."
+    orden: 15
+    variantes:
+      - {sku: AE-SET-01, nombre: Rosado, atributo: color, stock: 0}

@@ -32,6 +32,9 @@ EXPECTED_STOCK = {
     "bandolero-cuadrado": 2,  # 1 negro + 1 blanco
     "set-4-splash": 0,  # cantidad pendiente
     "splash-peach": 0,  # cantidad pendiente
+    "panalero-rosado-juicy": 0,  # cantidad pendiente
+    "reloj-bebe-plateado": 0,  # cantidad pendiente
+    "set-reloj-aeropostale-rosado": 0,  # cantidad pendiente
 }
 
 
@@ -43,11 +46,28 @@ def png_bytes(fmt="PNG"):
 
 # --- Seed --------------------------------------------------------------------
 
-def test_seed_carga_los_productos_en_borrador_sin_precios():
+PRECIOS_CONFIRMADOS = {
+    "bolso-corazon-rojo": 120,
+    "bolso-corazon-negro-brillos": 130,
+    "bolso-corazon-plateado-monograma": 120,
+    "panalero-rosado-juicy": 130,
+    "reloj-bebe-plateado": 80,
+    "set-reloj-aeropostale-rosado": 100,
+}
+
+
+def test_seed_carga_los_precios_confirmados_y_publica_solo_lo_completo():
     call_command("seed_inventory", dir=str(SEED), verbosity=0)
-    assert Product.objects.count() == 12
-    assert set(Product.objects.values_list("estado", flat=True)) == {"borrador"}
-    assert not Product.objects.exclude(precio_compra_usd=None, precio_venta_pen=None, margen=None).exists()
+    assert Product.objects.count() == 15
+    for slug, price in PRECIOS_CONFIRMADOS.items():
+        assert Product.objects.get(slug=slug).precio_venta_pen == price, slug
+    # Sin costos cargados: la administradora los completa con la calculadora.
+    assert not Product.objects.exclude(precio_compra_usd=None, margen=None).exists()
+    publicados = set(Product.objects.filter(estado="publicado").values_list("slug", flat=True))
+    assert publicados == {"bolso-corazon-rojo", "bolso-corazon-negro-brillos", "bolso-corazon-plateado-monograma"}
+    # Todo lo demás sigue en borrador hasta tener stock y precio.
+    assert not Product.objects.exclude(slug__in=publicados).exclude(estado="borrador").exists()
+    assert not Product.objects.filter(precio_venta_pen=None, estado="publicado").exists()
 
 
 def test_seed_respeta_el_stock_inicial_de_la_tabla():
@@ -67,7 +87,7 @@ def test_seed_es_idempotente_y_el_stock_audita_limpio():
     call_command("seed_inventory", dir=str(SEED), verbosity=0)
     movements = InventoryMovement.objects.count()
     call_command("seed_inventory", dir=str(SEED), verbosity=0)
-    assert Product.objects.count() == 12
+    assert Product.objects.count() == 15
     assert InventoryMovement.objects.count() == movements
     assert stock.audit_stock() == []
 
