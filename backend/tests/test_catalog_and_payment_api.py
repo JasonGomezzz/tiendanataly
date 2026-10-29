@@ -101,7 +101,7 @@ def test_libro_de_reclamaciones_genera_correlativo(api):
         "descripcion_bien": "Bolso", "tipo": "reclamo", "detalle": "Llegó con falla", "pedido_consumidor": "Cambio",
     }
     r = api.post("/api/v1/complaints/", data, format="json")
-    assert r.status_code == 201 and r.json()["correlativo"].endswith("-000001")
+    assert r.status_code == 201 and __import__("re").fullmatch(r"\d{4}-\d{6}", r.json()["correlativo"])
     assert api.post("/api/v1/complaints/", {**data, "es_menor": True}, format="json").status_code == 400  # falta apoderado
 
 
