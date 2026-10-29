@@ -1,0 +1,111 @@
+# Inventario inicial. Se carga con: python manage.py seed_inventory
+# Precios PENDIENTES: todos los productos quedan en "borrador" hasta que la administradora
+# complete precio de compra y de venta desde el admin.
+# Fotos: ./seed/images/<slug>.jpg (o .png/.webp). Si falta, el producto queda marcado "sin imagen".
+
+categorias:
+  - {nombre: Bolsos, slug: bolsos, orden: 1}
+  - {nombre: Mochilas, slug: mochilas, orden: 2}
+  - {nombre: Fragancias, slug: fragancias, orden: 3}
+  - {nombre: Cuidado corporal, slug: cuidado-corporal, orden: 4}
+
+marcas:
+  - {nombre: "Victoria's Secret", slug: victorias-secret}
+  - {nombre: PINK, slug: pink}
+  - {nombre: Por confirmar, slug: por-confirmar}
+
+productos:
+  - slug: bolso-corazon-rojo
+    nombre: Bolso corazón rojo
+    marca: victorias-secret
+    categoria: bolsos
+    descripcion: Bolso crossbody en forma de corazón con cadena dorada y correa larga ajustable.
+    orden: 1
+    variantes:
+      - {sku: VS-BCR-01, nombre: Rojo, atributo: color, stock: 4}
+
+  - slug: bolso-corazon-negro-brillos
+    nombre: Bolso corazón negro con brillos
+    marca: victorias-secret
+    categoria: bolsos
+    descripcion: Bolso en forma de corazón con cristales (strass) y herrajes plateados.
+    orden: 2
+    variantes:
+      - {sku: VS-BCN-01, nombre: Negro con brillos, atributo: color, stock: 2}
+
+  - slug: bolso-corazon-plateado-monograma
+    nombre: Bolso corazón plateado con monograma
+    marca: victorias-secret
+    categoria: bolsos
+    descripcion: Bolso en forma de corazón con strass en patrón de monograma y herrajes plateados.
+    orden: 3
+    variantes:
+      - {sku: VS-BCP-01, nombre: Plateado, atributo: color, stock: 2}
+
+  - slug: mochila-negra-acolchada
+    nombre: Mochila negra acolchada con cadena dorada
+    marca: victorias-secret
+    categoria: mochilas
+    descripcion: Mochila negra con acolchado en V y cadena dorada.
+    orden: 4
+    variantes:
+      - {sku: VS-MNA-01, nombre: Negro, atributo: color, stock: 1}
+
+  - slug: mochila-pink-deportiva
+    nombre: Mochila rosa deportiva
+    marca: pink
+    categoria: mochilas
+    descripcion: Mochila de nylon con solapa con hebilla y 2 bolsillos frontales.
+    orden: 5
+    variantes:
+      - {sku: PK-MRD-01, nombre: Rosa, atributo: color, stock: 1}
+
+  - slug: set-mini-eau-de-parfum-bombshell
+    nombre: Set de 3 mini eau de parfum Bombshell
+    marca: victorias-secret
+    categoria: fragancias
+    linea: Bombshell · Coffret "Picked with Love"
+    descripcion: Coffret con 3 mini eau de parfum de la línea Bombshell.
+    orden: 6
+    variantes:
+      - {sku: VS-SMB-01, nombre: Set de 3, atributo: unico, stock: 1}
+
+  - slug: splash-clasica
+    nombre: Splash línea clásica
+    marca: victorias-secret
+    categoria: fragancias
+    linea: Fragrance mist 250 ml
+    descripcion: Body splash (fragrance mist) de 250 ml de la línea clásica. Elige tu fragancia.
+    notas_internas: >-
+      PENDIENTE: hay 5 unidades en total repartidas entre estas fragancias (en las fotos se ven
+      Pure Seduction, Bare Vanilla, Love Spell y Velvet Petals). Definir cuántas hay de cada una
+      y cargarlas con "Ajustar stock" en cada variante.
+    orden: 7
+    variantes:
+      - {sku: VS-SPC-PS, nombre: Pure Seduction, atributo: fragancia, stock: 0}
+      - {sku: VS-SPC-BV, nombre: Bare Vanilla, atributo: fragancia, stock: 0}
+      - {sku: VS-SPC-LS, nombre: Love Spell, atributo: fragancia, stock: 0}
+      - {sku: VS-SPC-VP, nombre: Velvet Petals, atributo: fragancia, stock: 0}
+
+  - slug: splash-bare-vanilla
+    nombre: Splash Bare Vanilla
+    marca: victorias-secret
+    categoria: fragancias
+    linea: Fragrance mist 250 ml
+    descripcion: Body splash (fragrance mist) Bare Vanilla.
+    notas_internas: "PENDIENTE: confirmar si es la versión normal o shimmer."
+    orden: 8
+    variantes:
+      - {sku: VS-SBV-01, nombre: Única, atributo: unico, stock: 2}
+
+  - slug: crema-corporal-cucumber
+    nombre: Crema corporal Cucumber
+    marca: por-confirmar
+    categoria: cuidado-corporal
+    descripcion: Crema corporal con fragancia Cucumber.
+    notas_internas: >-
+      PENDIENTE: fue anotada como "cúrcuma" pero las fotos muestran envases que dicen CUCUMBER.
+      Confirmar nombre exacto, marca y línea antes de publicar.
+    orden: 9
+    variantes:
+      - {sku: CRC-CU-01, nombre: Única, atributo: unico, stock: 2}
