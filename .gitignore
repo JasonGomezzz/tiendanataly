@@ -1,0 +1,36 @@
+# Secretos y entorno
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.coverage
+htmlcov/
+*.egg-info/
+
+# Node / Next.js
+node_modules/
+.next/
+out/
+*.tsbuildinfo
+next-env.d.ts
+
+# Archivos subidos y estáticos generados
+backend/media/
+backend/staticfiles/
+
+# Datos locales / backups
+*.sqlite3
+backups/*.sql
+backups/*.dump
+
+# Editor / SO
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
