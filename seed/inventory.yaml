@@ -17,6 +17,7 @@ marcas:
   - {nombre: Juicy Couture, slug: juicy-couture}
   - {nombre: bebe, slug: bebe}
   - {nombre: Aéropostale, slug: aeropostale}
+  - {nombre: Guess, slug: guess}
 
 # PLACEHOLDER: costos y cobertura por confirmar con la administradora. Se editan en el admin.
 zonas_envio:
@@ -63,6 +64,8 @@ productos:
     marca: victorias-secret
     categoria: mochilas
     descripcion: Mochila negra con acolchado en V y cadena dorada.
+    precio_venta_pen: 150
+    estado: publicado
     orden: 4
     variantes:
       - {sku: VS-MNA-01, nombre: Negro, atributo: color, stock: 1}
@@ -92,6 +95,9 @@ productos:
     categoria: fragancias
     linea: Fragrance mist 250 ml
     descripcion: Body splash (fragrance mist) de 250 ml de la línea clásica. Elige tu fragancia.
+    precio_venta_pen: 50
+    oferta_cantidad: 2
+    oferta_precio: 90
     notas_internas: >-
       PENDIENTE: hay 5 unidades en total repartidas entre estas fragancias (en las fotos se ven
       Pure Seduction, Bare Vanilla, Love Spell y Velvet Petals). Definir cuántas hay de cada una
@@ -119,6 +125,7 @@ productos:
     marca: por-confirmar
     categoria: cuidado-corporal
     descripcion: Crema corporal con fragancia Cucumber.
+    precio_venta_pen: 40
     notas_internas: >-
       PENDIENTE: fue anotada como "cúrcuma" pero las fotos muestran envases que dicen CUCUMBER.
       Confirmar nombre exacto, marca y línea antes de publicar.
@@ -131,7 +138,9 @@ productos:
     marca: victorias-secret
     categoria: bolsos
     descripcion: Bandolero cuadrado con correa ajustable. Disponible en negro (acolchado en V) y blanco.
-    notas_internas: "PENDIENTE: confirmar nombre comercial, materiales y medidas."
+    notas_internas: "PENDIENTE: confirmar nombre comercial, materiales y medidas. Precio S/ 130 confirmado para el negro; se asumió el mismo para el blanco (confirmar)."
+    precio_venta_pen: 130
+    estado: publicado
     orden: 10
     variantes:
       - {sku: VS-BCU-NG, nombre: Negro, atributo: color, stock: 1}
@@ -191,3 +200,15 @@ productos:
     orden: 15
     variantes:
       - {sku: AE-SET-01, nombre: Rosado, atributo: color, stock: 0}
+
+  - slug: set-guess-red
+    nombre: Set Guess Red
+    marca: guess
+    categoria: fragancias
+    linea: Eau de toilette 100 ml + body spray + gel de ducha + neceser
+    descripcion: Set de regalo Guess Red con eau de toilette, body spray, gel de ducha y neceser, en su caja.
+    precio_venta_pen: 180
+    notas_internas: "PENDIENTE: cantidad en stock y medidas exactas de cada pieza. Precio de venta confirmado: S/ 180."
+    orden: 16
+    variantes:
+      - {sku: GU-RED-01, nombre: Set completo, atributo: unico, stock: 0}

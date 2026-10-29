@@ -35,6 +35,8 @@ PHOTOS = [
     ("9.02.59 PM", "set-reloj-aeropostale-rosado", 1, (0.05, 0.06, 0.98, 0.78), None),
     ("9.03.10 PM", "reloj-bebe-plateado", 1, (0.02, 0.2, 0.98, 0.8), (0, 0.14, 1, 0.86)),
     ("9.03.16 PM", "panalero-rosado-juicy", 1, (0.02, 0.08, 0.98, 0.78), None),
+    # foto horizontal: se centra sobre un fondo desenfocado para llegar a 4:5 sin cortar la caja
+    ("9.02.48 PM", "set-guess-red", 1, (0.03, 0.14, 0.99, 0.88), None, True),
 ]
 
 
@@ -61,6 +63,16 @@ def fit_ratio(box, size, region):
     return int(left), int(top), int(left + bw), int(top + bh)
 
 
+def pad_to_ratio(img):
+    """Lleva una foto horizontal a 4:5 centrándola sobre una copia suya desenfocada (sin recortar el producto)."""
+    w = min(img.width, MAX_W)
+    h = int(w / RATIO)
+    bg = ImageOps.fit(img, (w, h), Image.LANCZOS).filter(ImageFilter.GaussianBlur(28))
+    fg = img.resize((w, int(img.height * w / img.width)), Image.LANCZOS)
+    bg.paste(fg, (0, (h - fg.height) // 2))
+    return bg
+
+
 def enhance(img):
     img = ImageOps.autocontrast(img, cutoff=0.6)
     img = ImageEnhance.Color(img).enhance(1.06)
@@ -73,13 +85,16 @@ def main(src):
     src = Path(src)
     files = list(src.glob("*.jp*g"))
     OUT.mkdir(parents=True, exist_ok=True)
-    for token, slug, n, box, region in PHOTOS:
+    for token, slug, n, box, region, *extra in PHOTOS:
         match = [f for f in files if token in f.name and (token != "2.48.42 PM.jpeg" or "(1)" not in f.name)]
         if not match:
             print(f"  falta: {token}")
             continue
         img = ImageOps.exif_transpose(Image.open(match[0])).convert("RGB")
-        img = img.crop(fit_ratio(box, img.size, region))
+        if extra and extra[0]:
+            img = pad_to_ratio(img.crop((int(box[0] * img.width), int(box[1] * img.height), int(box[2] * img.width), int(box[3] * img.height))))
+        else:
+            img = img.crop(fit_ratio(box, img.size, region))
         if img.width > MAX_W:
             img = img.resize((MAX_W, int(MAX_W / RATIO)), Image.LANCZOS)
         name = f"{slug}.jpg" if n == 1 else f"{slug}-{n}.jpg"

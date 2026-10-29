@@ -66,6 +66,8 @@ class Command(BaseCommand):
                     "orden": p.get("orden", 0),
                     "estado": p.get("estado", Product.Estado.BORRADOR),
                     "precio_venta_pen": p.get("precio_venta_pen"),
+                    "oferta_cantidad": p.get("oferta_cantidad"),
+                    "oferta_precio": p.get("oferta_precio"),
                     "tipo_venta": p.get("tipo_venta", Product.TipoVenta.STOCK_LOCAL),
                 },
             )

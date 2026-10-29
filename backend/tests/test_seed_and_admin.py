@@ -35,6 +35,7 @@ EXPECTED_STOCK = {
     "panalero-rosado-juicy": 0,  # cantidad pendiente
     "reloj-bebe-plateado": 0,  # cantidad pendiente
     "set-reloj-aeropostale-rosado": 0,  # cantidad pendiente
+    "set-guess-red": 0,  # cantidad pendiente
 }
 
 
@@ -53,18 +54,23 @@ PRECIOS_CONFIRMADOS = {
     "panalero-rosado-juicy": 130,
     "reloj-bebe-plateado": 80,
     "set-reloj-aeropostale-rosado": 100,
+    "mochila-negra-acolchada": 150,
+    "bandolero-cuadrado": 130,
+    "crema-corporal-cucumber": 40,
+    "splash-clasica": 50,
+    "set-guess-red": 180,
 }
 
 
 def test_seed_carga_los_precios_confirmados_y_publica_solo_lo_completo():
     call_command("seed_inventory", dir=str(SEED), verbosity=0)
-    assert Product.objects.count() == 15
+    assert Product.objects.count() == 16
     for slug, price in PRECIOS_CONFIRMADOS.items():
         assert Product.objects.get(slug=slug).precio_venta_pen == price, slug
     # Sin costos cargados: la administradora los completa con la calculadora.
     assert not Product.objects.exclude(precio_compra_usd=None, margen=None).exists()
     publicados = set(Product.objects.filter(estado="publicado").values_list("slug", flat=True))
-    assert publicados == {"bolso-corazon-rojo", "bolso-corazon-negro-brillos", "bolso-corazon-plateado-monograma"}
+    assert publicados == {"bolso-corazon-rojo", "bolso-corazon-negro-brillos", "bolso-corazon-plateado-monograma", "mochila-negra-acolchada", "bandolero-cuadrado"}
     # Todo lo demás sigue en borrador hasta tener stock y precio.
     assert not Product.objects.exclude(slug__in=publicados).exclude(estado="borrador").exists()
     assert not Product.objects.filter(precio_venta_pen=None, estado="publicado").exists()
@@ -87,7 +93,7 @@ def test_seed_es_idempotente_y_el_stock_audita_limpio():
     call_command("seed_inventory", dir=str(SEED), verbosity=0)
     movements = InventoryMovement.objects.count()
     call_command("seed_inventory", dir=str(SEED), verbosity=0)
-    assert Product.objects.count() == 15
+    assert Product.objects.count() == 16
     assert InventoryMovement.objects.count() == movements
     assert stock.audit_stock() == []
 
@@ -184,3 +190,10 @@ def test_el_stock_no_es_editable_a_mano_en_el_admin(client, admin_role):
     client.force_login(admin_role)
     html = client.get(reverse("admin:catalog_productvariant_change", args=[v.pk])).content.decode()
     assert 'name="stock_disponible"' not in html
+
+
+def test_seed_carga_la_oferta_2_por_90_del_splash_clasica():
+    call_command("seed_inventory", dir=str(SEED), verbosity=0)
+    splash = Product.objects.get(slug="splash-clasica")
+    assert (splash.oferta_cantidad, splash.oferta_precio) == (2, 90)
+    assert not Product.objects.exclude(slug="splash-clasica").exclude(oferta_cantidad=None).exists()
