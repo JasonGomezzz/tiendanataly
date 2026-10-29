@@ -26,6 +26,14 @@ class Command(BaseCommand):
                 return path
         raise CommandError("No encontré inventory.yaml. Usa --dir con la carpeta del seed.")
 
+    @staticmethod
+    def _images_for(folder, slug):
+        """<slug>.jpg es la principal; <slug>-2.jpg, <slug>-3.jpg… son las siguientes."""
+        found = []
+        for ext in IMAGE_EXTENSIONS:
+            found += sorted(folder.glob(f"{slug}{ext}")) + sorted(folder.glob(f"{slug}-[0-9]{ext}"))
+        return sorted(found, key=lambda path: (path.stem != slug, path.name))
+
     @transaction.atomic
     def handle(self, *args, **options):
         seed_dir = self._seed_dir(options["dir"])
@@ -63,13 +71,13 @@ class Command(BaseCommand):
                     stock.add_stock(variant, v["stock"], "Stock inicial (seed)")
 
             if not product.imagenes.exists():
-                image_path = next((seed_dir / "images" / f"{p['slug']}{ext}" for ext in IMAGE_EXTENSIONS if (seed_dir / "images" / f"{p['slug']}{ext}").exists()), None)
-                if image_path:
-                    with image_path.open("rb") as fh:
-                        img = ProductImage(producto=product, alt=product.nombre)
-                        img.imagen.save(image_path.name, File(fh), save=True)
-                else:
+                paths = self._images_for(seed_dir / "images", p["slug"])
+                if not paths:
                     without_image += 1
                     self.stdout.write(self.style.WARNING(f"  sin imagen: {product.slug}"))
+                for order, image_path in enumerate(paths):
+                    with image_path.open("rb") as fh:
+                        img = ProductImage(producto=product, alt=product.nombre, orden=order)
+                        img.imagen.save(image_path.name, File(fh), save=True)
 
         self.stdout.write(self.style.SUCCESS(f"Seed listo: {created} producto(s) nuevo(s), {without_image} sin imagen. Todos en borrador y sin precios."))

@@ -109,3 +109,36 @@ productos:
     orden: 9
     variantes:
       - {sku: CRC-CU-01, nombre: Única, atributo: unico, stock: 2}
+
+  - slug: bandolero-cuadrado
+    nombre: Bandolero cuadrado
+    marca: victorias-secret
+    categoria: bolsos
+    descripcion: Bandolero cuadrado con correa ajustable. Disponible en negro (acolchado en V) y blanco.
+    notas_internas: "PENDIENTE: confirmar nombre comercial, materiales y medidas."
+    orden: 10
+    variantes:
+      - {sku: VS-BCU-NG, nombre: Negro, atributo: color, stock: 1}
+      - {sku: VS-BCU-BL, nombre: Blanco, atributo: color, stock: 1}
+
+  - slug: set-4-splash
+    nombre: Set de 4 splash
+    marca: victorias-secret
+    categoria: fragancias
+    linea: Fragrance mist · A moment to feel it all
+    descripcion: Set de 4 body splash de Victoria's Secret en estuche.
+    notas_internas: "PENDIENTE: cantidad en stock y fragancias exactas del set."
+    orden: 11
+    variantes:
+      - {sku: VS-S4S-01, nombre: Set de 4, atributo: unico, stock: 0}
+
+  - slug: splash-peach
+    nombre: Splash Peach
+    marca: por-confirmar
+    categoria: fragancias
+    linea: Fragrance mist
+    descripcion: Body splash fragancia Peach.
+    notas_internas: "PENDIENTE: marca/línea exacta (parece PINK), tamaño y cantidad en stock."
+    orden: 12
+    variantes:
+      - {sku: SPL-PCH-01, nombre: Única, atributo: unico, stock: 0}

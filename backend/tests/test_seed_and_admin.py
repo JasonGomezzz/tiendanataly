@@ -29,6 +29,9 @@ EXPECTED_STOCK = {
     "splash-clasica": 0,  # 5 unidades pendientes de repartir por fragancia
     "splash-bare-vanilla": 2,
     "crema-corporal-cucumber": 2,
+    "bandolero-cuadrado": 2,  # 1 negro + 1 blanco
+    "set-4-splash": 0,  # cantidad pendiente
+    "splash-peach": 0,  # cantidad pendiente
 }
 
 
@@ -40,9 +43,9 @@ def png_bytes(fmt="PNG"):
 
 # --- Seed --------------------------------------------------------------------
 
-def test_seed_carga_los_nueve_productos_en_borrador_sin_precios():
+def test_seed_carga_los_productos_en_borrador_sin_precios():
     call_command("seed_inventory", dir=str(SEED), verbosity=0)
-    assert Product.objects.count() == 9
+    assert Product.objects.count() == 12
     assert set(Product.objects.values_list("estado", flat=True)) == {"borrador"}
     assert not Product.objects.exclude(precio_compra_usd=None, precio_venta_pen=None, margen=None).exists()
 
@@ -64,14 +67,16 @@ def test_seed_es_idempotente_y_el_stock_audita_limpio():
     call_command("seed_inventory", dir=str(SEED), verbosity=0)
     movements = InventoryMovement.objects.count()
     call_command("seed_inventory", dir=str(SEED), verbosity=0)
-    assert Product.objects.count() == 9
+    assert Product.objects.count() == 12
     assert InventoryMovement.objects.count() == movements
     assert stock.audit_stock() == []
 
 
-def test_seed_marca_productos_sin_imagen():
+def test_seed_carga_las_fotos_disponibles_y_marca_las_que_faltan():
     call_command("seed_inventory", dir=str(SEED), verbosity=0)
-    assert all(p.sin_imagen for p in Product.objects.all())
+    assert not Product.objects.get(slug="bolso-corazon-rojo").sin_imagen
+    assert Product.objects.get(slug="bandolero-cuadrado").imagenes.count() == 2
+    assert Product.objects.get(slug="splash-bare-vanilla").sin_imagen
 
 
 def test_la_crema_no_se_llama_curcuma_ni_queda_con_marca_inventada():
