@@ -7,7 +7,7 @@ from apps.catalog import api as catalog_api
 from apps.core.api import PublicStoreSettingsView
 from apps.legal.api import ComplaintCreateView
 from apps.orders.api import CheckoutView, MyOrderViewSet, OrderWhatsappView, TrackOrderView
-from apps.payments.api import ManualPaymentView
+from apps.payments.api import CulqiChargeView, CulqiOrderView, CulqiWebhookView, ManualPaymentView
 from apps.shipping.api import ShippingZoneViewSet
 
 router = SimpleRouter()
@@ -41,6 +41,9 @@ urlpatterns = [
     path("orders/track/<uuid:public_token>/", TrackOrderView.as_view()),
     path("orders/<uuid:public_token>/whatsapp-message/", OrderWhatsappView.as_view()),
     path("orders/<uuid:public_token>/payments/manual/", ManualPaymentView.as_view()),
+    path("orders/<uuid:public_token>/payments/culqi/charge/", CulqiChargeView.as_view()),
+    path("orders/<uuid:public_token>/payments/culqi/order/", CulqiOrderView.as_view()),
+    path("webhooks/culqi/<str:secret>/", CulqiWebhookView.as_view()),
     path("complaints/", ComplaintCreateView.as_view()),
     path("", include(router.urls)),
 ]

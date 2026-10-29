@@ -23,11 +23,26 @@ class ScopedThrottleMixin:
 
 
 class PublicStoreSettingsSerializer(serializers.ModelSerializer):
+    payments_provider = serializers.SerializerMethodField()
+    culqi_public_key = serializers.SerializerMethodField()
+
+    def get_payments_provider(self, obj):
+        from django.conf import settings
+
+        # Culqi solo se ofrece si está activado por feature flag Y hay llaves configuradas.
+        ok = settings.PAYMENTS_PROVIDER == "culqi" and settings.CULQI_PUBLIC_KEY and settings.CULQI_SECRET_KEY
+        return "culqi" if ok else "manual_yape_plin"
+
+    def get_culqi_public_key(self, obj):
+        from django.conf import settings
+
+        return settings.CULQI_PUBLIC_KEY if self.get_payments_provider(obj) == "culqi" else ""
+
     class Meta:
         model = StoreSettings
         fields = (
             "nombre_tienda", "whatsapp", "aviso_legal", "costo_envio_default", "pct_adelanto",
-            "minutos_reserva", "yape_numero", "yape_titular", "plin_numero", "plin_titular",
+            "minutos_reserva", "yape_numero", "yape_titular", "plin_numero", "plin_titular", "payments_provider", "culqi_public_key",
         )
 
 
