@@ -4,6 +4,7 @@ from rest_framework.routers import SimpleRouter
 from apps.accounts import views as account_views
 from apps.cart import api as cart_api
 from apps.catalog import api as catalog_api
+from apps.core import staff_api
 from apps.core.api import PublicStoreSettingsView
 from apps.legal.api import ComplaintCreateView
 from apps.orders.api import CheckoutView, MyOrderViewSet, OrderWhatsappView, TrackOrderView
@@ -45,5 +46,24 @@ urlpatterns = [
     path("orders/<uuid:public_token>/payments/culqi/order/", CulqiOrderView.as_view()),
     path("webhooks/culqi/<str:secret>/", CulqiWebhookView.as_view()),
     path("complaints/", ComplaintCreateView.as_view()),
+    # Panel /admin (Next.js): solo Administradora, Staff y superusuario, con permisos por vista
+    path("admin/me/", staff_api.MeStaffView.as_view()),
+    path("admin/meta/", staff_api.MetaView.as_view()),
+    path("admin/dashboard/", staff_api.DashboardView.as_view()),
+    path("admin/products/", staff_api.ProductListView.as_view()),
+    path("admin/products/<int:pk>/", staff_api.ProductDetailView.as_view()),
+    path("admin/products/<int:pk>/images/", staff_api.ProductImagesView.as_view()),
+    path("admin/products/<int:pk>/variants/", staff_api.VariantCreateView.as_view()),
+    path("admin/products/<int:pk>/<str:action>/", staff_api.ProductStateView.as_view()),
+    path("admin/variants/<int:pk>/", staff_api.VariantDetailView.as_view()),
+    path("admin/variants/<int:pk>/adjust-stock/", staff_api.VariantStockView.as_view()),
+    path("admin/pricing/calculate/", staff_api.PriceCalcView.as_view()),
+    path("admin/exchange-rates/", staff_api.ExchangeRateView.as_view()),
+    path("admin/store-settings/", staff_api.StoreSettingsView.as_view()),
+    path("admin/orders/", staff_api.OrderListView.as_view()),
+    path("admin/orders/<int:pk>/", staff_api.OrderDetailView.as_view()),
+    path("admin/orders/<int:pk>/transition/", staff_api.OrderTransitionView.as_view()),
+    path("admin/payments/<int:pk>/<str:action>/", staff_api.PaymentActionView.as_view()),
+    path("admin/audit-log/", staff_api.AuditLogView.as_view()),
     path("", include(router.urls)),
 ]
