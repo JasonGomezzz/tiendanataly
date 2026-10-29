@@ -8,6 +8,8 @@ def order_message(order):
     lines = [f"Hola, quiero confirmar mi pedido #{order.pk} en {StoreSettings.load().nombre_tienda}:"]
     for item in order.items.all():
         lines.append(f"• {item.cantidad} × {item.nombre_snapshot} — S/ {item.subtotal:.2f}")
+    if order.descuento_pen:
+        lines.append(f"Oferta aplicada: −S/ {order.descuento_pen:.2f}")
     if order.envio_pen:
         lines.append(f"Envío: S/ {order.envio_pen:.2f}")
     lines.append(f"Total: S/ {order.total_pen:.2f}")

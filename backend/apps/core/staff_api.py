@@ -146,7 +146,7 @@ class DashboardView(StaffView):
 
 # --- Productos ---------------------------------------------------------------
 
-FINANCE_FIELDS = ("precio_compra_usd", "margen", "precio_venta_pen")
+FINANCE_FIELDS = ("precio_compra_usd", "margen", "precio_venta_pen", "oferta_cantidad", "oferta_precio")
 
 
 class AdminVariantSerializer(serializers.ModelSerializer):
@@ -181,7 +181,7 @@ class AdminProductSerializer(serializers.ModelSerializer):
         model = Product
         fields = (
             "id", "nombre", "slug", "marca", "marca_nombre", "categoria", "categoria_nombre", "linea", "descripcion", "detalles",
-            "estado", "tipo_venta", "orden", "notas_internas", "precio_compra_usd", "margen", "precio_venta_pen",
+            "estado", "tipo_venta", "orden", "notas_internas", "precio_compra_usd", "margen", "precio_venta_pen", "oferta_cantidad", "oferta_precio",
             "stock_total", "variantes", "imagenes",
         )
 
@@ -196,6 +196,14 @@ class AdminProductSerializer(serializers.ModelSerializer):
         if not can_see_finance(self.context["request"].user):
             for f in FINANCE_FIELDS:  # sin permiso se ignoran en silencio
                 attrs.pop(f, None)
+        from apps.pricing.promos import validate_offer
+
+        price = attrs.get("precio_venta_pen", getattr(self.instance, "precio_venta_pen", None))
+        qty = attrs.get("oferta_cantidad", getattr(self.instance, "oferta_cantidad", None))
+        offer = attrs.get("oferta_precio", getattr(self.instance, "oferta_precio", None))
+        error = validate_offer(price, qty, offer)
+        if error:
+            raise serializers.ValidationError({"oferta_precio": error})
         estado = attrs.get("estado")
         if estado in (Product.Estado.PUBLICADO, Product.Estado.AGOTADO):
             price = attrs.get("precio_venta_pen", getattr(self.instance, "precio_venta_pen", None))
@@ -453,7 +461,7 @@ def order_payload(order, user):
     addr = order.direccion_entrega or {}
     data = {
         "id": order.pk, "token": str(order.public_token), "estado": order.estado, "tipo_venta": order.tipo_venta,
-        "creado_en": order.creado_en, "total_pen": str(order.total_pen), "envio_pen": str(order.envio_pen), "subtotal_pen": str(order.subtotal_pen),
+        "creado_en": order.creado_en, "total_pen": str(order.total_pen), "envio_pen": str(order.envio_pen), "subtotal_pen": str(order.subtotal_pen), "descuento_pen": str(order.descuento_pen),
         "adelanto_pen": str(order.adelanto_pen), "saldo_pen": str(order.saldo_pendiente), "metodo_entrega": order.metodo_entrega,
         "cliente": {"nombre": order.cliente.nombre, "telefono": order.cliente.telefono, "email": order.cliente.email},
         "direccion": addr, "notas": order.notas,

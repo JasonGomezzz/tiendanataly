@@ -1,4 +1,5 @@
 import uuid
+from decimal import Decimal
 
 from django.conf import settings
 from django.db import transaction
@@ -9,12 +10,14 @@ from rest_framework.views import APIView
 
 from apps.catalog.models import Product, ProductVariant
 from apps.core.api import CsrfProtectedMixin, ScopedThrottleMixin
+from apps.pricing.promos import cart_discount
 
 from .models import Cart, CartItem
 
 COOKIE = "cart_token"
 COOKIE_AGE = 60 * 60 * 24 * 30
 MAX_PER_LINE = 10
+CENT = Decimal("0.01")
 PREORDER = Product.TipoVenta.POR_ENCARGO  # no depende del stock físico
 SELLABLE = (Product.Estado.PUBLICADO, Product.Estado.AGOTADO)
 
@@ -50,7 +53,8 @@ def with_cookie(request, response, cart):
 
 def serialize_cart(cart, request=None):
     items = []
-    subtotal = 0
+    subtotal = Decimal("0")
+    offer_lines = []
     if cart is not None:
         qs = cart.items.select_related("variante__producto").prefetch_related("variante__producto__imagenes").order_by("id")
         for it in qs:
@@ -63,6 +67,7 @@ def serialize_cart(cart, request=None):
             line = price * it.cantidad
             if ok:
                 subtotal += line
+                offer_lines.append((p, it.cantidad, price))
             items.append({
                 "id": it.pk,
                 "variante_id": v.pk,
@@ -76,8 +81,13 @@ def serialize_cart(cart, request=None):
                 "subtotal": str(line),
                 "disponible": available,
                 "ok": ok,
+                "oferta": {"cantidad": p.oferta_cantidad, "precio": str(p.oferta_precio)} if p.oferta_cantidad and p.oferta_precio is not None else None,
             })
-    return {"items": items, "count": sum(i["cantidad"] for i in items), "subtotal": str(subtotal)}
+    descuento, _ = cart_discount(offer_lines)
+    return {
+        "items": items, "count": sum(i["cantidad"] for i in items), "subtotal": str(subtotal.quantize(CENT)),
+        "descuento": str(descuento.quantize(CENT)), "total": str((subtotal - descuento).quantize(CENT)),
+    }
 
 
 class AddItemSerializer(serializers.Serializer):

@@ -47,7 +47,7 @@ class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
         fields = (
-            "numero", "token", "estado", "tipo_venta", "subtotal_pen", "envio_pen", "total_pen", "adelanto_pen", "saldo_pen",
+            "numero", "token", "estado", "tipo_venta", "subtotal_pen", "descuento_pen", "envio_pen", "total_pen", "adelanto_pen", "saldo_pen",
             "monto_a_cobrar", "por_pagar", "metodo_entrega", "expira_en", "creado_en", "items", "historial", "pagos",
         )
 

@@ -29,6 +29,7 @@ class Order(models.Model):
     tipo_venta = models.CharField(max_length=12, choices=[("stock_local", "Stock en Lima"), ("por_encargo", "Por encargo")], default="stock_local")
 
     subtotal_pen = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal("0"))
+    descuento_pen = models.DecimalField("descuento por ofertas (S/)", max_digits=10, decimal_places=2, default=Decimal("0"))
     envio_pen = models.DecimalField(max_digits=8, decimal_places=2, default=Decimal("0"))
     total_pen = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal("0"))
     adelanto_pen = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal("0"))

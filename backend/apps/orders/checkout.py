@@ -13,6 +13,7 @@ from apps.catalog.models import Product
 from apps.core.models import StoreSettings
 from apps.integrations.services import enqueue
 from apps.inventory import services as stock
+from apps.pricing.promos import cart_discount
 from apps.shipping.models import ShippingZone
 
 from .models import Order, OrderItem, OrderStatusHistory
@@ -70,7 +71,8 @@ def create_order_from_cart(cart, data, *, user=None, ip=None):
     cfg = StoreSettings.load()
     subtotal = sum((price * qty for _, _, qty, price in lines), Decimal("0"))
     envio = zone.costo
-    total = (subtotal + envio).quantize(CENT)
+    descuento, _ = cart_discount([(p, qty, price) for _, p, qty, price in lines])
+    total = (subtotal - descuento + envio).quantize(CENT)
     if tipo_venta == "por_encargo":
         adelanto = (total * cfg.pct_adelanto / Decimal("100")).quantize(CENT, rounding=ROUND_HALF_UP)
         saldo = total - adelanto
@@ -83,7 +85,7 @@ def create_order_from_cart(cart, data, *, user=None, ip=None):
     _record_consents(customer, data, ip)
 
     order = Order.objects.create(
-        cliente=customer, tipo_venta=tipo_venta, subtotal_pen=subtotal, envio_pen=envio, total_pen=total,
+        cliente=customer, tipo_venta=tipo_venta, subtotal_pen=subtotal, descuento_pen=descuento, envio_pen=envio, total_pen=total,
         adelanto_pen=adelanto, saldo_pen=saldo, metodo_entrega=data["metodo_entrega"], zona_envio=zone,
         direccion_entrega=data.get("direccion") or {}, notas=data.get("notas", ""),
         doc_tipo=data.get("doc_tipo", ""), doc_numero=data.get("doc_numero", ""), expira_en=expira,

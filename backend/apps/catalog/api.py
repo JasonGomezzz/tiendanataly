@@ -61,7 +61,7 @@ class ProductListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Product
-        fields = ("slug", "nombre", "marca", "categoria", "linea", "tipo_venta", "precio_venta_pen", "imagen_principal", "stock", "ultimas_unidades", "agotado")
+        fields = ("slug", "nombre", "marca", "categoria", "linea", "tipo_venta", "precio_venta_pen", "oferta_cantidad", "oferta_precio", "imagen_principal", "stock", "ultimas_unidades", "agotado")
 
     def _stock(self, obj):
         if obj.tipo_venta == Product.TipoVenta.POR_ENCARGO:

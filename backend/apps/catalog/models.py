@@ -60,6 +60,10 @@ class Product(models.Model):
     margen = models.DecimalField("margen (S/)", max_digits=9, decimal_places=2, null=True, blank=True)
     precio_venta_pen = models.DecimalField("precio de venta (S/)", max_digits=9, decimal_places=2, null=True, blank=True, validators=[MinValueValidator(Decimal("0"))])
 
+    # Oferta por cantidad: «llevando N por S/ X» (p. ej. 2 por S/ 90). Ver apps/pricing/promos.py.
+    oferta_cantidad = models.PositiveSmallIntegerField("oferta: cantidad", null=True, blank=True, help_text="Ej: 2")
+    oferta_precio = models.DecimalField("oferta: precio por esa cantidad (S/)", max_digits=9, decimal_places=2, null=True, blank=True, help_text="Ej: 90")
+
     notas_internas = models.TextField(blank=True, help_text="Solo visible en el admin.")
     creado_en = models.DateTimeField(auto_now_add=True)
     actualizado_en = models.DateTimeField(auto_now=True)
@@ -72,6 +76,15 @@ class Product(models.Model):
 
     def __str__(self):
         return self.nombre
+
+    def clean(self):
+        from django.core.exceptions import ValidationError
+
+        from apps.pricing.promos import validate_offer
+
+        error = validate_offer(self.precio_venta_pen, self.oferta_cantidad, self.oferta_precio)
+        if error:
+            raise ValidationError({"oferta_precio": error})
 
     @property
     def sin_imagen(self):
