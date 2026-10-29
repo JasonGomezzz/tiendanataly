@@ -62,6 +62,7 @@ PRECIOS_CONFIRMADOS = {
     "splash-clasica": 50,
     "set-guess-red": 180,
     "set-4-splash": 75,
+    "set-mini-eau-de-parfum-bombshell": 90,
 }
 
 
@@ -73,7 +74,7 @@ def test_seed_carga_los_precios_confirmados_y_publica_solo_lo_completo():
     # Sin costos cargados: la administradora los completa con la calculadora.
     assert not Product.objects.exclude(precio_compra_usd=None, margen=None).exists()
     publicados = set(Product.objects.filter(estado="publicado").values_list("slug", flat=True))
-    assert publicados == {"bolso-corazon-rojo", "bolso-corazon-negro-brillos", "bolso-corazon-plateado-monograma", "mochila-negra-acolchada", "bandolero-cuadrado"}
+    assert publicados == {"bolso-corazon-rojo", "bolso-corazon-negro-brillos", "bolso-corazon-plateado-monograma", "mochila-negra-acolchada", "bandolero-cuadrado", "set-mini-eau-de-parfum-bombshell"}
     # Todo lo demás sigue en borrador hasta tener stock y precio.
     assert not Product.objects.exclude(slug__in=publicados).exclude(estado="borrador").exists()
     assert not Product.objects.filter(precio_venta_pen=None, estado="publicado").exists()

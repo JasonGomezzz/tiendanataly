@@ -85,6 +85,8 @@ productos:
     categoria: fragancias
     linea: Bombshell · Coffret "Picked with Love"
     descripcion: Coffret con 3 mini eau de parfum de la línea Bombshell.
+    precio_venta_pen: 90
+    estado: publicado
     orden: 6
     variantes:
       - {sku: VS-SMB-01, nombre: Set de 3, atributo: unico, stock: 1}
