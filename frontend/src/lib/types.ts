@@ -47,6 +47,8 @@ export type StoreInfo = {
   yape_titular: string;
   plin_numero: string;
   plin_titular: string;
+  payments_provider: "manual_yape_plin" | "culqi";
+  culqi_public_key: string;
 };
 
 export type Zone = {
@@ -88,6 +90,7 @@ export type Order = {
   adelanto_pen: string;
   saldo_pen: string;
   monto_a_cobrar: string;
+  por_pagar: string;
   metodo_entrega: string;
   expira_en: string | null;
   creado_en: string;
