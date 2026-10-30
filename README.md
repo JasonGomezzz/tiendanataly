@@ -14,6 +14,9 @@ Monorepo con **Django + DRF + PostgreSQL** (backend), **Next.js (App Router) + T
 | 3. Pagos y estados | Culqi (sin validar contra sandbox), webhooks verificados, n8n, encargos con adelanto | `feat/fase-3-pagos` | Hecha |
 | 4. Panel `/admin` en Next.js | Dashboard, alta de producto con cámara, calculadora, tablero de pedidos | `feat/fase-4-panel-admin` | Hecha |
 | 5. Endurecimiento y salida | 2FA, IP real tras proxy, CSP, respaldos, CI, carga, compose de producción | `feat/fase-5-salida` | Hecha (ver `docs/checklist-salida.md`) |
+| Datos reales | Catálogo con precios y fotos propias (20 productos), logo de la marca, fotos de mesa con fondo quitado | `feat/datos-reales` | Hecha |
+| Ofertas | Oferta «N por S/ X» por producto (aplicada en bolsa, checkout y pedido) | `feat/ofertas` | Hecha |
+| Medios de pago | Yape, Plin y transferencia (BCP, Interbank) con imagen de referencia y botón de copiar; cuentas editables en el panel | `feat/medios-de-pago` | Hecha |
 
 Documentación: [despliegue](docs/despliegue.md) · [respaldos](docs/respaldos.md) · [checklist de salida](docs/checklist-salida.md) · [Culqi y n8n](docs/pagos-culqi.md) · [marca](docs/marca.md) · [guía de fotos](docs/guia-fotos.md).
 
@@ -39,9 +42,17 @@ El panel de la administradora está en `/admin` (login con correo, contraseña y
 Primer uso:
 
 ```bash
-docker compose exec backend python manage.py seed_inventory      # carga los 9 productos (borrador, sin precios)
+docker compose exec backend python manage.py seed_inventory      # carga los productos de seed/inventory.yaml
 docker compose exec backend python manage.py createsuperuser     # solo el desarrollador es superusuario
 ```
+
+Yape, Plin y las cuentas bancarias **no están en el repositorio**: se copian `seed/negocio.example.yaml` a `seed/negocio.local.yaml` (ignorado por git), se llenan los datos reales y se corre:
+
+```bash
+docker compose exec backend python manage.py load_business_data
+```
+
+También se pueden escribir desde `/admin` → Ajustes.
 
 ### Usuarias del admin
 
