@@ -4,6 +4,8 @@ from django.db.models.signals import m2m_changed, post_delete, post_save
 from django.dispatch import receiver
 
 from apps.catalog.models import Collection, Product, ProductImage, ProductVariant
+from apps.core.models import StoreSettings
+from apps.payments.models import BankAccount
 
 from .tasks import schedule_revalidation
 
@@ -15,6 +17,13 @@ STOCK_ONLY = {"stock_disponible", "stock_reservado"}
 @receiver([post_save, post_delete], sender=Collection)
 @receiver(m2m_changed, sender=Collection.productos.through)
 def catalog_changed(sender, **kwargs):
+    transaction.on_commit(schedule_revalidation)
+
+
+@receiver([post_save, post_delete], sender=StoreSettings)
+@receiver([post_save, post_delete], sender=BankAccount)
+def store_data_changed(sender, **kwargs):
+    # WhatsApp, Yape/Plin y cuentas salen en todas las páginas: que el cambio se vea ya, no a los 5 minutos.
     transaction.on_commit(schedule_revalidation)
 
 

@@ -11,7 +11,7 @@ from apps.catalog.models import Collection, Product
 from apps.core.models import StoreSettings
 from apps.integrations import tasks as integration_tasks
 from apps.orders.models import Order
-from apps.payments.models import Payment
+from apps.payments.models import BankAccount, Payment
 from tests.factories import make_order, make_product
 
 pytestmark = pytest.mark.django_db
@@ -163,6 +163,22 @@ def test_guardar_un_producto_pide_revalidar_el_frontend(settings, monkeypatch):
     assert integration_tasks.revalidate_frontend() is True
     req = calls[0]
     assert req.full_url == "http://frontend:3000/api/revalidate" and req.get_header("X-revalidate-secret") == "secreto-de-prueba"
+
+
+def test_cambiar_whatsapp_o_cuentas_pide_revalidar(monkeypatch, django_capture_on_commit_callbacks):
+    from apps.integrations import signals
+
+    pedidos = []
+    monkeypatch.setattr(signals, "schedule_revalidation", lambda: pedidos.append(1))
+    with django_capture_on_commit_callbacks(execute=True):
+        cfg = StoreSettings.load()
+        cfg.whatsapp = "51900000000"
+        cfg.save()
+    assert pedidos
+    pedidos.clear()
+    with django_capture_on_commit_callbacks(execute=True):
+        BankAccount.objects.create(banco="bcp", numero="11112222333344", cci="0" * 20, titular="Prueba")
+    assert pedidos
 
 
 def test_sin_secreto_no_se_intenta_revalidar(settings):
