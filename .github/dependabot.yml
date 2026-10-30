@@ -8,6 +8,10 @@ updates:
     groups:
       django:
         patterns: ["django*", "djangorestframework*"]
+    ignore:
+      # Django 5.2 es LTS (soporte hasta abril de 2028); no saltar a una versión mayor sin probarla.
+      - dependency-name: "django"
+        update-types: ["version-update:semver-major"]
   - package-ecosystem: npm
     directory: /frontend
     schedule:
@@ -16,6 +20,13 @@ updates:
     groups:
       next-react:
         patterns: ["next", "react", "react-dom", "@types/react*"]
+    ignore:
+      # @types/node debe seguir la versión de Node que corre en producción (22 LTS).
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
+      # TypeScript sube de mayor cuando Next.js lo soporte, no antes.
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
   - package-ecosystem: docker
     directory: /backend
     schedule:
@@ -24,6 +35,10 @@ updates:
     directory: /frontend
     schedule:
       interval: monthly
+    ignore:
+      # Producción usa Node LTS (22). Las versiones impares (23, 25...) no son LTS.
+      - dependency-name: "node"
+        update-types: ["version-update:semver-major"]
   - package-ecosystem: github-actions
     directory: /
     schedule:
