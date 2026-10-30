@@ -22,5 +22,8 @@ Las fotos tomadas dentro de la tienda (gente al fondo, luz mixta, mano sostenien
 ## Cómo subirlas
 Admin → Productos → elegir el producto → sección *Imágenes* → subir. La primera (orden 0) es la principal. Se aceptan JPG, PNG y WEBP de hasta 5 MB.
 
+## Quitar el fondo (solo fotos propias de productos solos)
+`python tools/cutout_photos.py "<carpeta>"` (requiere `pip install rembg onnxruntime`) recorta el producto y lo deja sobre un fondo liso de catálogo. Sirve para cajas y bolsos sobre una mesa o sofá; **no** para fotos donde una mano sostiene el producto. Se corre después de `prepare_photos.py`.
+
 ## Mejora automática de las fotos que ya existen
 `python tools/prepare_photos.py "<carpeta con las fotos originales>"` recorta, corrige luz/color/nitidez y deja los archivos listos en `seed/images/`. No inventa fondos nuevos: mejora lo que hay.

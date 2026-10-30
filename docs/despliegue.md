@@ -52,6 +52,9 @@ $P exec backend python manage.py seed_inventory             # opcional: carga el
    Si pierde el celular: `enroll_2fa correo@ejemplo.com --reset`.
 3. Ella entra al panel en `https://TU-DOMINIO/admin` con correo, contraseña y el código de su app.
 
+### Datos del negocio (Yape, Plin y cuentas bancarias)
+Tres formas, a elección: (1) en `/admin` → Ajustes, (2) en el admin de Django → *Cuentas bancarias*, o (3) copiando `seed/negocio.local.yaml` (parte de `seed/negocio.example.yaml`) al servidor y corriendo `$P exec backend python manage.py load_business_data`. Ese archivo está en `.gitignore`: los números de cuenta nunca se suben a GitHub.
+
 ### Datos de la tienda
 En `/admin` → Ajustes: WhatsApp, Yape/Plin, tipo de cambio, margen y comisión, minutos de reserva. En el admin de Django → *Zonas de envío*: costos reales.
 
