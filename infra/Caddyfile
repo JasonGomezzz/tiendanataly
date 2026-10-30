@@ -1,0 +1,40 @@
+# Caddy: HTTPS automático (Let's Encrypt), compresión y enrutamiento.
+# SITE_ADDRESS = tu dominio (p. ej. marlefashion.pe). Para pruebas locales sin HTTPS usa ":80".
+{$SITE_ADDRESS:localhost} {
+	encode zstd gzip
+
+	header {
+		-Server
+		X-Content-Type-Options nosniff
+		Referrer-Policy strict-origin-when-cross-origin
+	}
+
+	# Archivos subidos (fotos y comprobantes de pago): se sirven directo desde el disco.
+	handle /media/* {
+		root * /srv
+		header Cache-Control "public, max-age=2592000, immutable"
+		file_server
+	}
+
+	# Estáticos del admin de Django
+	handle /static/* {
+		root * /srv
+		header Cache-Control "public, max-age=2592000, immutable"
+		file_server
+	}
+
+	# API y admin de Django (la ruta del admin es secreta: ADMIN_URL_PATH)
+	@backend path /api/* /health/ /{$ADMIN_URL_PATH}*
+	handle @backend {
+		reverse_proxy backend:8000 {
+			# El proxy es la única fuente de X-Forwarded-For: se descarta lo que envíe el cliente.
+			header_up X-Forwarded-For {remote_host}
+			header_up X-Forwarded-Proto {scheme}
+		}
+	}
+
+	# Todo lo demás: la tienda (Next.js)
+	handle {
+		reverse_proxy frontend:3000
+	}
+}

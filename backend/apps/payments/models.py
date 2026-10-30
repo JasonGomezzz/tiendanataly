@@ -15,6 +15,7 @@ class Payment(models.Model):
         YAPE = "yape", "Yape"
         PLIN = "plin", "Plin"
         TARJETA = "tarjeta", "Tarjeta"
+        TRANSFERENCIA = "transferencia", "Transferencia bancaria"
         OTRO = "otro", "Otro"
 
     class Estado(models.TextChoices):
@@ -26,7 +27,7 @@ class Payment(models.Model):
 
     pedido = models.ForeignKey("orders.Order", on_delete=models.PROTECT, related_name="pagos")
     proveedor = models.CharField(max_length=20, choices=Proveedor.choices)
-    metodo = models.CharField(max_length=10, choices=Metodo.choices, default=Metodo.OTRO)
+    metodo = models.CharField(max_length=16, choices=Metodo.choices, default=Metodo.OTRO)
     external_id = models.CharField("id en la pasarela", max_length=100, blank=True, db_index=True)
     # El monto lo calcula el servidor a partir del pedido; nunca se acepta el del cliente.
     monto = models.DecimalField(max_digits=10, decimal_places=2)
@@ -65,3 +66,30 @@ class PaymentEvent(models.Model):
         constraints = [models.UniqueConstraint(fields=["proveedor", "event_id"], name="evento_unico_por_proveedor")]
         verbose_name = "evento de pago"
         verbose_name_plural = "eventos de pago"
+
+
+class BankAccount(models.Model):
+    """Cuenta de la tienda para recibir transferencias. Se muestra a la clienta al pagar."""
+
+    class Banco(models.TextChoices):
+        BCP = "bcp", "BCP"
+        INTERBANK = "interbank", "Interbank"
+        BBVA = "bbva", "BBVA"
+        SCOTIABANK = "scotiabank", "Scotiabank"
+        OTRO = "otro", "Otro"
+
+    banco = models.CharField(max_length=12, choices=Banco.choices)
+    etiqueta = models.CharField(max_length=60, blank=True, help_text="Ej: Cuenta de ahorros soles")
+    numero = models.CharField("número de cuenta", max_length=30)
+    cci = models.CharField("CCI (interbancario)", max_length=30, blank=True)
+    titular = models.CharField(max_length=120, blank=True)
+    activa = models.BooleanField(default=True)
+    orden = models.PositiveSmallIntegerField(default=0)
+
+    class Meta:
+        ordering = ["orden", "id"]
+        verbose_name = "cuenta bancaria"
+        verbose_name_plural = "cuentas bancarias"
+
+    def __str__(self):
+        return f"{self.get_banco_display()} {self.numero}"

@@ -22,16 +22,24 @@ MAX_W = 1200
 # archivo (parte del nombre) -> (slug destino, n.º de foto, caja del producto en fracciones x0,y0,x1,y1)
 # Las cajas se ajustaron mirando cada foto; "region" delimita el área válida (sin barras negras).
 PHOTOS = [
-    ("2.48.02 PM", "bandolero-cuadrado", 1, (0.12, 0.19, 0.97, 0.66), None),
-    ("9.00.41 PM", "bandolero-cuadrado", 2, (0.03, 0.38, 0.97, 0.66), (0, 0.19, 1, 0.81)),
+    ("2.48.02 PM", "bandolero-cuadrado-blanco", 1, (0.12, 0.19, 0.97, 0.66), None),
+    ("9.00.41 PM", "bandolero-cuadrado-negro", 1, (0.03, 0.38, 0.97, 0.66), (0, 0.19, 1, 0.81)),
+    ("pink-pineapple", "splash-pink-pineapple", 1, (0.18, 0.345, 0.66, 0.72), (0, 0.345, 1, 0.82)),
     ("5.35.24 PM", "bolso-corazon-rojo", 1, (0.03, 0.36, 0.97, 0.68), (0, 0.225, 1, 0.78)),
     ("8.16.05 PM (4)", "bolso-corazon-negro-brillos", 1, (0.12, 0.12, 0.95, 0.72), None),
     ("8.16.05 PM (5)", "bolso-corazon-plateado-monograma", 1, (0.28, 0.0, 0.92, 0.66), None),
     ("9.01.28 PM", "mochila-negra-acolchada", 1, (0.25, 0.05, 0.82, 0.78), None),
     ("2.48.43 PM", "mochila-pink-deportiva", 1, (0.15, 0.20, 0.95, 0.72), None),
     ("8.16.05 PM (2)", "set-mini-eau-de-parfum-bombshell", 1, (0.20, 0.06, 0.94, 0.74), None),
-    ("2.48.42 PM.jpeg", "set-4-splash", 1, (0.02, 0.20, 0.96, 0.68), None),
-    ("8.16.05 PM (3)", "splash-clasica", 1, (0.0, 0.04, 1.0, 0.78), None),
+    ("df62745e", "set-4-splash", 1, (0.02, 0.2, 0.96, 0.7), None),
+    ("perfumenataly", "splash-clasica", 1, (0.0, 0.1, 1.0, 0.85), None),
+    ("victoriasecretmorado", "splash-midnight-marshmallow", 1, (0.30, 0.20, 0.75, 0.68), None),
+    ("perfumenatalydorado", "splash-pina-tropicale", 1, (0.28, 0.15, 0.88, 0.78), None),
+    ("9.02.59 PM", "set-reloj-aeropostale-rosado", 1, (0.05, 0.06, 0.98, 0.78), None),
+    ("9.03.10 PM", "reloj-bebe-plateado", 1, (0.02, 0.2, 0.98, 0.8), (0, 0.14, 1, 0.86)),
+    ("9.03.16 PM", "panalero-rosado-juicy", 1, (0.02, 0.08, 0.98, 0.78), None),
+    # foto horizontal: se centra sobre un fondo desenfocado para llegar a 4:5 sin cortar la caja
+    ("9.02.48 PM", "set-guess-red", 1, (0.03, 0.14, 0.99, 0.88), None, True),
 ]
 
 
@@ -58,6 +66,16 @@ def fit_ratio(box, size, region):
     return int(left), int(top), int(left + bw), int(top + bh)
 
 
+def pad_to_ratio(img):
+    """Lleva una foto horizontal a 4:5 centrándola sobre una copia suya desenfocada (sin recortar el producto)."""
+    w = min(img.width, MAX_W)
+    h = int(w / RATIO)
+    bg = ImageOps.fit(img, (w, h), Image.LANCZOS).filter(ImageFilter.GaussianBlur(28))
+    fg = img.resize((w, int(img.height * w / img.width)), Image.LANCZOS)
+    bg.paste(fg, (0, (h - fg.height) // 2))
+    return bg
+
+
 def enhance(img):
     img = ImageOps.autocontrast(img, cutoff=0.6)
     img = ImageEnhance.Color(img).enhance(1.06)
@@ -68,15 +86,19 @@ def enhance(img):
 
 def main(src):
     src = Path(src)
-    files = list(src.glob("*.jp*g"))
+    originales = Path(__file__).resolve().parent.parent / "seed" / "originales"
+    files = list(src.glob("*.jp*g")) + list(src.glob("*.jfif")) + list(originales.glob("*.*"))
     OUT.mkdir(parents=True, exist_ok=True)
-    for token, slug, n, box, region in PHOTOS:
+    for token, slug, n, box, region, *extra in PHOTOS:
         match = [f for f in files if token in f.name and (token != "2.48.42 PM.jpeg" or "(1)" not in f.name)]
         if not match:
             print(f"  falta: {token}")
             continue
         img = ImageOps.exif_transpose(Image.open(match[0])).convert("RGB")
-        img = img.crop(fit_ratio(box, img.size, region))
+        if extra and extra[0]:
+            img = pad_to_ratio(img.crop((int(box[0] * img.width), int(box[1] * img.height), int(box[2] * img.width), int(box[3] * img.height))))
+        else:
+            img = img.crop(fit_ratio(box, img.size, region))
         if img.width > MAX_W:
             img = img.resize((MAX_W, int(MAX_W / RATIO)), Image.LANCZOS)
         name = f"{slug}.jpg" if n == 1 else f"{slug}-{n}.jpg"

@@ -34,3 +34,6 @@ backups/*.dump
 .vscode/
 .DS_Store
 Thumbs.db
+celerybeat-schedule*
+!.env.prod.example
+seed/*.local.yaml

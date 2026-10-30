@@ -1,4 +1,4 @@
-# Tienda Nataly
+# Marle Fashion
 
 Tienda web de importación y venta de bolsos, mochilas y fragancias para un negocio familiar en Lima.
 Monorepo con **Django + DRF + PostgreSQL** (backend), **Next.js (App Router) + TypeScript + Tailwind** (frontend), Celery + Redis para tareas, y Docker Compose para desarrollo.
@@ -7,13 +7,18 @@ Monorepo con **Django + DRF + PostgreSQL** (backend), **Next.js (App Router) + T
 
 ## Estado
 
-| Fase | Contenido | Estado |
-|---|---|---|
-| 1. Base | Monorepo, modelos, seed, API base, admin con roles, auth segura, tests | Hecha (pendiente de revisión) |
-| 2. Vitrina | Catálogo, producto, carrito, reserva, WhatsApp, Yape/Plin manual, SEO | Pendiente |
-| 3. Pagos y estados | Culqi (sandbox), webhooks, n8n, pre-order | Pendiente |
-| 4. Panel `/admin` en Next.js | Dashboard y alta de producto desde el celular | Pendiente |
-| 5. Endurecimiento y salida | Carga, backups, despliegue, checklist | Pendiente |
+| Fase | Contenido | Rama | Estado |
+|---|---|---|---|
+| 1. Base | Monorepo, modelos, seed, API base, admin con roles, auth segura, tests | `feat/fase-1-base` | Hecha |
+| 2. Vitrina | Catálogo, producto, bolsa, reserva atómica, WhatsApp, Yape/Plin manual, SEO | `feat/fase-2-vitrina` | Hecha |
+| 3. Pagos y estados | Culqi (sin validar contra sandbox), webhooks verificados, n8n, encargos con adelanto | `feat/fase-3-pagos` | Hecha |
+| 4. Panel `/admin` en Next.js | Dashboard, alta de producto con cámara, calculadora, tablero de pedidos | `feat/fase-4-panel-admin` | Hecha |
+| 5. Endurecimiento y salida | 2FA, IP real tras proxy, CSP, respaldos, CI, carga, compose de producción | `feat/fase-5-salida` | Hecha (ver `docs/checklist-salida.md`) |
+| Datos reales | Catálogo con precios y fotos propias (20 productos), logo de la marca, fotos de mesa con fondo quitado | `feat/datos-reales` | Hecha |
+| Ofertas | Oferta «N por S/ X» por producto (aplicada en bolsa, checkout y pedido) | `feat/ofertas` | Hecha |
+| Medios de pago | Yape, Plin y transferencia (BCP, Interbank) con imagen de referencia y botón de copiar; cuentas editables en el panel | `feat/medios-de-pago` | Hecha |
+
+Documentación: [despliegue](docs/despliegue.md) · [VPS o Vercel](docs/hosting-opciones.md) · [respaldos](docs/respaldos.md) · [checklist de salida](docs/checklist-salida.md) · [Culqi y n8n](docs/pagos-culqi.md) · [marca](docs/marca.md) · [guía de fotos](docs/guia-fotos.md).
 
 ## Levantar el proyecto
 
@@ -26,6 +31,8 @@ docker compose up --build
 
 Esto arranca Postgres, Redis, el backend (migra y crea los roles solo), el worker y el beat de Celery, y el frontend.
 
+El panel de la administradora está en `/admin` (login con correo, contraseña y código 2FA). Producción: ver [docs/despliegue.md](docs/despliegue.md) y `docker-compose.prod.yml`.
+
 | Servicio | URL |
 |---|---|
 | Frontend | http://localhost:3000 |
@@ -35,9 +42,17 @@ Esto arranca Postgres, Redis, el backend (migra y crea los roles solo), el worke
 Primer uso:
 
 ```bash
-docker compose exec backend python manage.py seed_inventory      # carga los 9 productos (borrador, sin precios)
+docker compose exec backend python manage.py seed_inventory      # carga los productos de seed/inventory.yaml
 docker compose exec backend python manage.py createsuperuser     # solo el desarrollador es superusuario
 ```
+
+Yape, Plin y las cuentas bancarias **no están en el repositorio**: se copian `seed/negocio.example.yaml` a `seed/negocio.local.yaml` (ignorado por git), se llenan los datos reales y se corre:
+
+```bash
+docker compose exec backend python manage.py load_business_data
+```
+
+También se pueden escribir desde `/admin` → Ajustes.
 
 ### Usuarias del admin
 

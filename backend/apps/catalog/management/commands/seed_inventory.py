@@ -9,12 +9,13 @@ from django.db import transaction
 from apps.catalog.models import Brand, Category, Product, ProductImage, ProductVariant
 from apps.core.models import StoreSettings
 from apps.inventory import services as stock
+from apps.shipping.models import ShippingZone
 
 IMAGE_EXTENSIONS = (".jpg", ".jpeg", ".png", ".webp")
 
 
 class Command(BaseCommand):
-    help = "Carga el inventario inicial desde seed/inventory.yaml (idempotente, productos en borrador, sin precios)."
+    help = "Carga el inventario inicial desde seed/inventory.yaml (idempotente). Solo publica lo que el yaml marca como publicado."
 
     def add_arguments(self, parser):
         parser.add_argument("--dir", help="Carpeta del seed (por defecto /seed o ./seed del repo)")
@@ -40,12 +41,18 @@ class Command(BaseCommand):
         data = yaml.safe_load((seed_dir / "inventory.yaml").read_text(encoding="utf-8"))
         StoreSettings.load()
 
+        # Zonas de envío PLACEHOLDER (costos por confirmar); solo se crean si no hay ninguna.
+        if not ShippingZone.objects.exists():
+            for zone in data.get("zonas_envio", []):
+                ShippingZone.objects.create(**zone)
+
         for c in data["categorias"]:
             Category.objects.update_or_create(slug=c["slug"], defaults={"nombre": c["nombre"], "orden": c.get("orden", 0)})
         for b in data["marcas"]:
             Brand.objects.update_or_create(slug=b["slug"], defaults={"nombre": b["nombre"]})
 
         created = without_image = 0
+        without_price = sum(1 for p in data["productos"] if not p.get("precio_venta_pen"))
         for p in data["productos"]:
             product, is_new = Product.objects.get_or_create(
                 slug=p["slug"],
@@ -57,7 +64,10 @@ class Command(BaseCommand):
                     "descripcion": p.get("descripcion", ""),
                     "notas_internas": p.get("notas_internas", ""),
                     "orden": p.get("orden", 0),
-                    "estado": Product.Estado.BORRADOR,
+                    "estado": p.get("estado", Product.Estado.BORRADOR),
+                    "precio_venta_pen": p.get("precio_venta_pen"),
+                    "oferta_cantidad": p.get("oferta_cantidad"),
+                    "oferta_precio": p.get("oferta_precio"),
                     "tipo_venta": p.get("tipo_venta", Product.TipoVenta.STOCK_LOCAL),
                 },
             )
@@ -80,4 +90,4 @@ class Command(BaseCommand):
                         img = ProductImage(producto=product, alt=product.nombre, orden=order)
                         img.imagen.save(image_path.name, File(fh), save=True)
 
-        self.stdout.write(self.style.SUCCESS(f"Seed listo: {created} producto(s) nuevo(s), {without_image} sin imagen. Todos en borrador y sin precios."))
+        self.stdout.write(self.style.SUCCESS(f"Seed listo: {created} producto(s) nuevo(s), {without_image} sin imagen. {without_price} sin precio de venta."))

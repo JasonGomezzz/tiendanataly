@@ -15,14 +15,17 @@ class ManualYapePlinProvider(PaymentProvider):
         existing = Payment.objects.filter(idempotency_key=idempotency_key).first()
         if existing:
             return existing
+        amount = order.amount_due()
+        if amount <= 0:
+            raise ValueError("El pedido no tiene nada por pagar.")
         try:
             with transaction.atomic():
                 return Payment.objects.create(
                     pedido=order,
                     proveedor=self.name,
                     metodo=metodo,
-                    monto=order.monto_a_cobrar,
-                    es_adelanto=order.tipo_venta == "por_encargo" and bool(order.adelanto_pen),
+                    monto=amount,
+                    es_adelanto=order.tipo_venta == "por_encargo" and order.estado == "PENDIENTE_PAGO",
                     estado=Payment.Estado.EN_REVISION if comprobante else Payment.Estado.PENDIENTE,
                     idempotency_key=idempotency_key,
                     comprobante=comprobante or "",

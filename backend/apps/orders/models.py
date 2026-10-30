@@ -29,6 +29,7 @@ class Order(models.Model):
     tipo_venta = models.CharField(max_length=12, choices=[("stock_local", "Stock en Lima"), ("por_encargo", "Por encargo")], default="stock_local")
 
     subtotal_pen = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal("0"))
+    descuento_pen = models.DecimalField("descuento por ofertas (S/)", max_digits=10, decimal_places=2, default=Decimal("0"))
     envio_pen = models.DecimalField(max_digits=8, decimal_places=2, default=Decimal("0"))
     total_pen = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal("0"))
     adelanto_pen = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal("0"))
@@ -54,6 +55,25 @@ class Order(models.Model):
 
     def __str__(self):
         return f"Pedido #{self.pk}"
+
+    @property
+    def pagado_total(self):
+        from django.db.models import Sum
+
+        return self.pagos.filter(estado="aprobado").aggregate(t=Sum("monto"))["t"] or Decimal("0")
+
+    @property
+    def saldo_pendiente(self):
+        return max(self.total_pen - self.pagado_total, Decimal("0"))
+
+    def amount_due(self):
+        """Lo que se puede pagar ahora: el cobro inicial, o el saldo de un encargo ya pagado a cuenta."""
+        E = self.Estado
+        if self.estado in (E.PENDIENTE_PAGO, E.EXPIRADO):
+            return max(self.monto_a_cobrar - self.pagado_total, Decimal("0"))
+        if self.tipo_venta == "por_encargo" and self.estado in (E.PAGADO, E.COMPRADO, E.EN_CAMINO, E.EN_LIMA):
+            return self.saldo_pendiente
+        return Decimal("0")
 
     @property
     def monto_a_cobrar(self):

@@ -68,7 +68,11 @@ def transition(order, nuevo, user=None, nota=""):
     order.save()
 
     OrderStatusHistory.objects.create(pedido=order, estado_anterior=anterior, estado_nuevo=nuevo, usuario=user, nota=nota)
-    enqueue("order.status_changed", {"pedido": order.pk, "token": str(order.public_token), "anterior": anterior, "nuevo": nuevo})
+    enqueue("order.status_changed", {
+        "pedido": order.pk, "token": str(order.public_token), "anterior": anterior, "nuevo": nuevo,
+        "cliente": order.cliente.nombre, "telefono": order.cliente.telefono, "total": str(order.total_pen),
+        "tipo_venta": order.tipo_venta, "saldo_pendiente": str(order.saldo_pendiente),
+    })
     return order
 
 

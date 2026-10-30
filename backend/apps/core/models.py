@@ -9,7 +9,7 @@ from django.utils import timezone
 class StoreSettings(models.Model):
     """Configuración única de la tienda (siempre pk=1)."""
 
-    nombre_tienda = models.CharField(max_length=120, default="Tienda Nataly")
+    nombre_tienda = models.CharField(max_length=120, default="Marle Fashion")
     whatsapp = models.CharField("WhatsApp para pedidos", max_length=20, blank=True, help_text="Con código de país, sin +. Ej: 51999999999")
     aviso_legal = models.CharField(
         max_length=255,

@@ -10,7 +10,7 @@ from apps.inventory import services as stock
 
 from .models import Brand, Category, Collection, Product, ProductImage, ProductVariant, Review, StockAlert
 
-FINANCE_FIELDS = ("precio_compra_usd", "margen", "precio_venta_pen")
+FINANCE_FIELDS = ("precio_compra_usd", "margen", "precio_venta_pen", "oferta_cantidad", "oferta_precio")
 
 
 def thumbnail(image, size=56):

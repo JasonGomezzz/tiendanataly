@@ -7,8 +7,10 @@
   --color-stone: #aaa29e;
   --color-umber: #605b51;
   --color-umber-dark: #4d3222;
-  --color-rose: #ad705c;
-  --color-blush: #f6e9e4;
+  --color-rose: #cc8a84;
+  /* Versión más oscura del acento para texto pequeño (contraste WCAG AA sobre blanco). */
+  --color-rose-text: #9c5650;
+  --color-blush: #fbeee9;
 
   --font-serif: var(--font-cormorant), Georgia, serif;
   --font-sans: var(--font-jost), system-ui, sans-serif;

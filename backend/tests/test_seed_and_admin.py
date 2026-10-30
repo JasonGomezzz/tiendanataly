@@ -29,9 +29,17 @@ EXPECTED_STOCK = {
     "splash-clasica": 0,  # 5 unidades pendientes de repartir por fragancia
     "splash-bare-vanilla": 2,
     "crema-corporal-cucumber": 2,
-    "bandolero-cuadrado": 2,  # 1 negro + 1 blanco
+    "bandolero-cuadrado-negro": 1,
+    "bandolero-cuadrado-blanco": 1,
+    "splash-pink-pineapple": 0,  # cantidad pendiente
     "set-4-splash": 0,  # cantidad pendiente
     "splash-peach": 0,  # cantidad pendiente
+    "panalero-rosado-juicy": 0,  # cantidad pendiente
+    "reloj-bebe-plateado": 0,  # cantidad pendiente
+    "set-reloj-aeropostale-rosado": 0,  # cantidad pendiente
+    "set-guess-red": 0,  # cantidad pendiente
+    "splash-midnight-marshmallow": 0,  # cantidad pendiente
+    "splash-pina-tropicale": 0,  # cantidad pendiente
 }
 
 
@@ -43,11 +51,41 @@ def png_bytes(fmt="PNG"):
 
 # --- Seed --------------------------------------------------------------------
 
-def test_seed_carga_los_productos_en_borrador_sin_precios():
+PRECIOS_CONFIRMADOS = {
+    "bolso-corazon-rojo": 120,
+    "bolso-corazon-negro-brillos": 130,
+    "bolso-corazon-plateado-monograma": 120,
+    "panalero-rosado-juicy": 130,
+    "reloj-bebe-plateado": 80,
+    "set-reloj-aeropostale-rosado": 100,
+    "mochila-negra-acolchada": 150,
+    "bandolero-cuadrado-negro": 130,
+    "bandolero-cuadrado-blanco": 120,
+    "mochila-pink-deportiva": 85,
+    "splash-bare-vanilla": 50,
+    "splash-midnight-marshmallow": 50,
+    "splash-pina-tropicale": 45,
+    "splash-pink-pineapple": 45,
+    "crema-corporal-cucumber": 40,
+    "splash-clasica": 50,
+    "set-guess-red": 180,
+    "set-4-splash": 75,
+    "set-mini-eau-de-parfum-bombshell": 90,
+}
+
+
+def test_seed_carga_los_precios_confirmados_y_publica_solo_lo_completo():
     call_command("seed_inventory", dir=str(SEED), verbosity=0)
-    assert Product.objects.count() == 12
-    assert set(Product.objects.values_list("estado", flat=True)) == {"borrador"}
-    assert not Product.objects.exclude(precio_compra_usd=None, precio_venta_pen=None, margen=None).exists()
+    assert Product.objects.count() == 20
+    for slug, price in PRECIOS_CONFIRMADOS.items():
+        assert Product.objects.get(slug=slug).precio_venta_pen == price, slug
+    # Sin costos cargados: la administradora los completa con la calculadora.
+    assert not Product.objects.exclude(precio_compra_usd=None, margen=None).exists()
+    publicados = set(Product.objects.filter(estado="publicado").values_list("slug", flat=True))
+    assert publicados == {"bolso-corazon-rojo", "bolso-corazon-negro-brillos", "bolso-corazon-plateado-monograma", "mochila-negra-acolchada", "mochila-pink-deportiva", "bandolero-cuadrado-negro", "bandolero-cuadrado-blanco", "set-mini-eau-de-parfum-bombshell"}
+    # Todo lo demás sigue en borrador hasta tener stock y precio.
+    assert not Product.objects.exclude(slug__in=publicados).exclude(estado="borrador").exists()
+    assert not Product.objects.filter(precio_venta_pen=None, estado="publicado").exists()
 
 
 def test_seed_respeta_el_stock_inicial_de_la_tabla():
@@ -67,7 +105,7 @@ def test_seed_es_idempotente_y_el_stock_audita_limpio():
     call_command("seed_inventory", dir=str(SEED), verbosity=0)
     movements = InventoryMovement.objects.count()
     call_command("seed_inventory", dir=str(SEED), verbosity=0)
-    assert Product.objects.count() == 12
+    assert Product.objects.count() == 20
     assert InventoryMovement.objects.count() == movements
     assert stock.audit_stock() == []
 
@@ -75,15 +113,18 @@ def test_seed_es_idempotente_y_el_stock_audita_limpio():
 def test_seed_carga_las_fotos_disponibles_y_marca_las_que_faltan():
     call_command("seed_inventory", dir=str(SEED), verbosity=0)
     assert not Product.objects.get(slug="bolso-corazon-rojo").sin_imagen
-    assert Product.objects.get(slug="bandolero-cuadrado").imagenes.count() == 2
+    for slug in ("bandolero-cuadrado-negro", "bandolero-cuadrado-blanco", "splash-pink-pineapple", "mochila-pink-deportiva"):
+        assert Product.objects.get(slug=slug).imagenes.count() == 1, slug
     assert Product.objects.get(slug="splash-bare-vanilla").sin_imagen
+    for slug in ("splash-clasica", "splash-midnight-marshmallow", "splash-pina-tropicale"):
+        assert not Product.objects.get(slug=slug).sin_imagen, slug
 
 
 def test_la_crema_no_se_llama_curcuma_ni_queda_con_marca_inventada():
     call_command("seed_inventory", dir=str(SEED), verbosity=0)
     crema = Product.objects.get(slug="crema-corporal-cucumber")
     assert "cúrcuma" not in crema.nombre.lower() and crema.marca.slug == "por-confirmar"
-    assert "PENDIENTE" in crema.notas_internas
+    assert "NO SE PROMOCIONA" in crema.notas_internas and crema.estado == "borrador"
 
 
 # --- Subida de imágenes ------------------------------------------------------
@@ -164,3 +205,10 @@ def test_el_stock_no_es_editable_a_mano_en_el_admin(client, admin_role):
     client.force_login(admin_role)
     html = client.get(reverse("admin:catalog_productvariant_change", args=[v.pk])).content.decode()
     assert 'name="stock_disponible"' not in html
+
+
+def test_seed_carga_la_oferta_2_por_90_del_splash_clasica():
+    call_command("seed_inventory", dir=str(SEED), verbosity=0)
+    splash = Product.objects.get(slug="splash-clasica")
+    assert (splash.oferta_cantidad, splash.oferta_precio) == (2, 90)
+    assert not Product.objects.exclude(slug="splash-clasica").exclude(oferta_cantidad=None).exists()

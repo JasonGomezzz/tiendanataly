@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     "apps.payments",
     "apps.shipping",
     "apps.legal",
-    "apps.integrations",
+    "apps.integrations.apps.IntegrationsConfig",
 ]
 
 AUTH_USER_MODEL = "accounts.User"
@@ -160,13 +160,17 @@ ALLOWED_IMAGE_FORMATS = {"JPEG", "PNG", "WEBP"}
 # --- Admin / 2FA ------------------------------------------------------------
 ADMIN_URL_PATH = env("ADMIN_URL_PATH", default="panel-nataly-cambiar/")
 ADMIN_REQUIRE_2FA = env.bool("ADMIN_REQUIRE_2FA", default=False)
-OTP_TOTP_ISSUER = env("STORE_NAME", default="Tienda Nataly")
+OTP_TOTP_ISSUER = env("STORE_NAME", default="Marle Fashion")
 
 # --- Bloqueo por intentos fallidos (django-axes) -----------------------------
 AXES_FAILURE_LIMIT = 5
 AXES_COOLOFF_TIME = timedelta(minutes=15)
 AXES_LOCKOUT_PARAMETERS = [["ip_address", "username"]]
 AXES_RESET_ON_SUCCESS = True
+# Detrás de Caddy todos llegarían con la IP del proxy y un atacante bloquearía a todas las clientas:
+# se usa la IP real (ver apps/core/ip.py).
+BEHIND_PROXY = env.bool("BEHIND_PROXY", default=False)
+AXES_CLIENT_IP_CALLABLE = "apps.core.ip.client_ip"
 
 # --- DRF --------------------------------------------------------------------
 REST_FRAMEWORK = {
@@ -188,14 +192,16 @@ REST_FRAMEWORK = {
         "rest_framework.throttling.AnonRateThrottle",
         "rest_framework.throttling.UserRateThrottle",
     ],
+    "NUM_PROXIES": 1 if env.bool("BEHIND_PROXY", default=False) else 0,
+    # Límites por IP. Se pueden subir por entorno solo para pruebas de carga (THROTTLE_<NOMBRE>=1000/min).
     "DEFAULT_THROTTLE_RATES": {
-        "anon": "120/min",
-        "user": "240/min",
-        "login": "10/min",
-        "register": "5/min",
-        "password_reset": "5/hour",
-        "checkout": "10/min",
-        "complaint": "5/hour",
+        "anon": env("THROTTLE_ANON", default="120/min"),
+        "user": env("THROTTLE_USER", default="240/min"),
+        "login": env("THROTTLE_LOGIN", default="10/min"),
+        "register": env("THROTTLE_REGISTER", default="5/min"),
+        "password_reset": env("THROTTLE_PASSWORD_RESET", default="5/hour"),
+        "checkout": env("THROTTLE_CHECKOUT", default="10/min"),
+        "complaint": env("THROTTLE_COMPLAINT", default="5/hour"),
     },
 }
 
@@ -206,14 +212,33 @@ CELERY_TIMEZONE = TIME_ZONE
 CELERY_TASK_ALWAYS_EAGER = False
 
 # --- Negocio ----------------------------------------------------------------
-STORE_NAME = env("STORE_NAME", default="Tienda Nataly")
+STORE_NAME = env("STORE_NAME", default="Marle Fashion")
+SITE_URL = env("NEXT_PUBLIC_SITE_URL", default="http://localhost:3000").rstrip("/")
+
+# Correo (recuperar contraseña). En desarrollo se imprime en consola.
+EMAIL_HOST = env("EMAIL_HOST", default="")
+EMAIL_PORT = env.int("EMAIL_PORT", default=587)
+EMAIL_HOST_USER = env("EMAIL_HOST_USER", default="")
+EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD", default="")
+EMAIL_USE_TLS = env.bool("EMAIL_USE_TLS", default=True)
+DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL", default="Marle Fashion <no-responder@localhost>")
 STORE_WHATSAPP = env("STORE_WHATSAPP", default="")
 PAYMENTS_PROVIDER = env("PAYMENTS_PROVIDER", default="manual_yape_plin")
+# Culqi. La clave secreta solo vive en el backend. CULQI_API_BASE y la unidad del monto (céntimos)
+# deben confirmarse contra el sandbox antes de salir a producción (ver docs/pagos-culqi.md).
+CULQI_PUBLIC_KEY = env("CULQI_PUBLIC_KEY", default="")
+CULQI_SECRET_KEY = env("CULQI_SECRET_KEY", default="")
+CULQI_API_BASE = env("CULQI_API_BASE", default="https://api.culqi.com/v2")
+CULQI_WEBHOOK_SECRET = env("CULQI_WEBHOOK_SECRET", default="")
+CULQI_WEBHOOK_BASIC_USER = env("CULQI_WEBHOOK_BASIC_USER", default="")
+CULQI_WEBHOOK_BASIC_PASSWORD = env("CULQI_WEBHOOK_BASIC_PASSWORD", default="")
 FRONTEND_URL = env("FRONTEND_URL", default="http://frontend:3000")
 REVALIDATE_SECRET = env("REVALIDATE_SECRET", default="")
 N8N_WEBHOOK_URL = env("N8N_WEBHOOK_URL", default="")
 N8N_WEBHOOK_SECRET = env("N8N_WEBHOOK_SECRET", default="")
 SEED_DIR = Path(env("SEED_DIR", default="/seed"))
+# Sirve /media desde Django (el optimizador de imágenes de Next lo pide por dentro). Caddy los sirve al público.
+SERVE_MEDIA = env.bool("SERVE_MEDIA", default=False)
 
 # IGV vigente en Perú, usado al calcular comisiones de pasarela.
 IGV_RATE = "0.18"

@@ -173,4 +173,4 @@ def test_pago_rechazado_deja_el_pedido_pendiente():
 
 def test_pasarela_no_implementada_falla_claro():
     with pytest.raises(NotImplementedError):
-        get_provider("culqi")
+        get_provider("izipay")

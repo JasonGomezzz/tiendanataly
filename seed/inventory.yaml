@@ -8,11 +8,22 @@ categorias:
   - {nombre: Mochilas, slug: mochilas, orden: 2}
   - {nombre: Fragancias, slug: fragancias, orden: 3}
   - {nombre: Cuidado corporal, slug: cuidado-corporal, orden: 4}
+  - {nombre: Relojes y accesorios, slug: relojes-accesorios, orden: 5}
 
 marcas:
   - {nombre: "Victoria's Secret", slug: victorias-secret}
   - {nombre: PINK, slug: pink}
   - {nombre: Por confirmar, slug: por-confirmar}
+  - {nombre: Juicy Couture, slug: juicy-couture}
+  - {nombre: bebe, slug: bebe}
+  - {nombre: Aéropostale, slug: aeropostale}
+  - {nombre: Guess, slug: guess}
+
+# PLACEHOLDER: costos y cobertura por confirmar con la administradora. Se editan en el admin.
+zonas_envio:
+  - {nombre: Delivery en Lima, metodo: delivery_lima, costo: 10, cobertura: "Lima Metropolitana (por confirmar)", orden: 1}
+  - {nombre: Recojo en punto de encuentro, metodo: recojo, costo: 0, instrucciones: "Punto de recojo por confirmar.", orden: 2}
+  - {nombre: Envío a provincias, metodo: courier_provincia, costo: 20, courier: "Por confirmar", cobertura: "Todo el Perú", orden: 3}
 
 productos:
   - slug: bolso-corazon-rojo
@@ -20,6 +31,8 @@ productos:
     marca: victorias-secret
     categoria: bolsos
     descripcion: Bolso crossbody en forma de corazón con cadena dorada y correa larga ajustable.
+    precio_venta_pen: 120
+    estado: publicado
     orden: 1
     variantes:
       - {sku: VS-BCR-01, nombre: Rojo, atributo: color, stock: 4}
@@ -29,6 +42,8 @@ productos:
     marca: victorias-secret
     categoria: bolsos
     descripcion: Bolso en forma de corazón con cristales (strass) y herrajes plateados.
+    precio_venta_pen: 130
+    estado: publicado
     orden: 2
     variantes:
       - {sku: VS-BCN-01, nombre: Negro con brillos, atributo: color, stock: 2}
@@ -38,6 +53,8 @@ productos:
     marca: victorias-secret
     categoria: bolsos
     descripcion: Bolso en forma de corazón con strass en patrón de monograma y herrajes plateados.
+    precio_venta_pen: 120
+    estado: publicado
     orden: 3
     variantes:
       - {sku: VS-BCP-01, nombre: Plateado, atributo: color, stock: 2}
@@ -47,6 +64,8 @@ productos:
     marca: victorias-secret
     categoria: mochilas
     descripcion: Mochila negra con acolchado en V y cadena dorada.
+    precio_venta_pen: 150
+    estado: publicado
     orden: 4
     variantes:
       - {sku: VS-MNA-01, nombre: Negro, atributo: color, stock: 1}
@@ -56,6 +75,8 @@ productos:
     marca: pink
     categoria: mochilas
     descripcion: Mochila de nylon con solapa con hebilla y 2 bolsillos frontales.
+    precio_venta_pen: 85
+    estado: publicado
     orden: 5
     variantes:
       - {sku: PK-MRD-01, nombre: Rosa, atributo: color, stock: 1}
@@ -66,6 +87,8 @@ productos:
     categoria: fragancias
     linea: Bombshell · Coffret "Picked with Love"
     descripcion: Coffret con 3 mini eau de parfum de la línea Bombshell.
+    precio_venta_pen: 90
+    estado: publicado
     orden: 6
     variantes:
       - {sku: VS-SMB-01, nombre: Set de 3, atributo: unico, stock: 1}
@@ -76,6 +99,9 @@ productos:
     categoria: fragancias
     linea: Fragrance mist 250 ml
     descripcion: Body splash (fragrance mist) de 250 ml de la línea clásica. Elige tu fragancia.
+    precio_venta_pen: 50
+    oferta_cantidad: 2
+    oferta_precio: 90
     notas_internas: >-
       PENDIENTE: hay 5 unidades en total repartidas entre estas fragancias (en las fotos se ven
       Pure Seduction, Bare Vanilla, Love Spell y Velvet Petals). Definir cuántas hay de cada una
@@ -93,7 +119,8 @@ productos:
     categoria: fragancias
     linea: Fragrance mist 250 ml
     descripcion: Body splash (fragrance mist) Bare Vanilla.
-    notas_internas: "PENDIENTE: confirmar si es la versión normal o shimmer."
+    precio_venta_pen: 50
+    notas_internas: "PENDIENTE: foto propia y confirmar si es la versión normal o shimmer (en la estantería hay de las dos)."
     orden: 8
     variantes:
       - {sku: VS-SBV-01, nombre: Única, atributo: unico, stock: 2}
@@ -103,22 +130,36 @@ productos:
     marca: por-confirmar
     categoria: cuidado-corporal
     descripcion: Crema corporal con fragancia Cucumber.
+    precio_venta_pen: 40
     notas_internas: >-
-      PENDIENTE: fue anotada como "cúrcuma" pero las fotos muestran envases que dicen CUCUMBER.
-      Confirmar nombre exacto, marca y línea antes de publicar.
+      NO SE PROMOCIONA por ahora (sin foto propia). Fue anotada como "cúrcuma" pero las fotos muestran
+      envases que dicen CUCUMBER. Confirmar nombre exacto, marca y línea antes de publicar.
     orden: 9
     variantes:
       - {sku: CRC-CU-01, nombre: Única, atributo: unico, stock: 2}
 
-  - slug: bandolero-cuadrado
-    nombre: Bandolero cuadrado
+  - slug: bandolero-cuadrado-negro
+    nombre: Bandolero cuadrado negro
     marca: victorias-secret
     categoria: bolsos
-    descripcion: Bandolero cuadrado con correa ajustable. Disponible en negro (acolchado en V) y blanco.
+    descripcion: Bandolero cuadrado negro acolchado en V, con cadena dorada y correa ajustable.
     notas_internas: "PENDIENTE: confirmar nombre comercial, materiales y medidas."
+    precio_venta_pen: 130
+    estado: publicado
     orden: 10
     variantes:
       - {sku: VS-BCU-NG, nombre: Negro, atributo: color, stock: 1}
+
+  - slug: bandolero-cuadrado-blanco
+    nombre: Bandolero cuadrado blanco
+    marca: victorias-secret
+    categoria: bolsos
+    descripcion: Bandolero cuadrado blanco perforado con el monograma VS, con cadena dorada y correa ajustable.
+    notas_internas: "PENDIENTE: confirmar nombre comercial, materiales y medidas."
+    precio_venta_pen: 120
+    estado: publicado
+    orden: 11
+    variantes:
       - {sku: VS-BCU-BL, nombre: Blanco, atributo: color, stock: 1}
 
   - slug: set-4-splash
@@ -126,7 +167,8 @@ productos:
     marca: victorias-secret
     categoria: fragancias
     linea: Fragrance mist · A moment to feel it all
-    descripcion: Set de 4 body splash de Victoria's Secret en estuche.
+    descripcion: Set de 4 body splash de Victoria's Secret en estuche "A moment to feel it all".
+    precio_venta_pen: 75
     notas_internas: "PENDIENTE: cantidad en stock y fragancias exactas del set."
     orden: 11
     variantes:
@@ -142,3 +184,84 @@ productos:
     orden: 12
     variantes:
       - {sku: SPL-PCH-01, nombre: Única, atributo: unico, stock: 0}
+
+  - slug: panalero-rosado-juicy
+    nombre: Pañalero rosado Juicy Couture
+    marca: juicy-couture
+    categoria: bolsos
+    descripcion: Bolso pañalero rosado con logo en relieve, asas y bolsillos laterales.
+    precio_venta_pen: 130
+    notas_internas: "PENDIENTE: cantidad en stock, medidas y si incluye cambiador. Precio de venta confirmado: S/ 130."
+    orden: 13
+    variantes:
+      - {sku: JC-PAN-01, nombre: Rosado, atributo: color, stock: 0}
+
+  - slug: reloj-bebe-plateado
+    nombre: Reloj plateado bebe
+    marca: bebe
+    categoria: relojes-accesorios
+    descripcion: Reloj plateado con detalles de cristales, en estuche con accesorios.
+    precio_venta_pen: 80
+    notas_internas: "PENDIENTE: cantidad en stock y qué accesorios incluye el estuche. Precio de venta confirmado: S/ 80."
+    orden: 14
+    variantes:
+      - {sku: BB-REL-01, nombre: Plateado, atributo: color, stock: 0}
+
+  - slug: set-reloj-aeropostale-rosado
+    nombre: Set reloj Aéropostale rosado
+    marca: aeropostale
+    categoria: relojes-accesorios
+    descripcion: Reloj rosado con cristales y pulseras a juego, en estuche.
+    precio_venta_pen: 100
+    notas_internas: "PENDIENTE: cantidad en stock. Precio de venta confirmado: S/ 100."
+    orden: 15
+    variantes:
+      - {sku: AE-SET-01, nombre: Rosado, atributo: color, stock: 0}
+
+  - slug: set-guess-red
+    nombre: Set Guess Red
+    marca: guess
+    categoria: fragancias
+    linea: Eau de toilette 100 ml + body spray + gel de ducha + neceser
+    descripcion: Set de regalo Guess Red con eau de toilette, body spray, gel de ducha y neceser, en su caja.
+    precio_venta_pen: 180
+    notas_internas: "PENDIENTE: cantidad en stock y medidas exactas de cada pieza. Precio de venta confirmado: S/ 180."
+    orden: 16
+    variantes:
+      - {sku: GU-RED-01, nombre: Set completo, atributo: unico, stock: 0}
+
+  - slug: splash-midnight-marshmallow
+    nombre: Splash Midnight Marshmallow
+    marca: victorias-secret
+    categoria: fragancias
+    linea: Fragrance mist 250 ml
+    descripcion: Body splash (fragrance mist) Midnight Marshmallow de Victoria's Secret. También existe en loción.
+    precio_venta_pen: 50
+    notas_internas: "PENDIENTE: cantidad en stock y si se vende también la loción (236 ml). La oferta 2 por S/ 90 aplica SOLO al splash línea clásica."
+    orden: 17
+    variantes:
+      - {sku: VS-MMM-01, nombre: Única, atributo: unico, stock: 0}
+
+  - slug: splash-pina-tropicale
+    nombre: Splash Piña Tropicale
+    marca: victorias-secret
+    categoria: fragancias
+    linea: Fragrance mist 250 ml
+    descripcion: Body splash (fragrance mist) Piña Tropicale de Victoria's Secret. También existe en loción.
+    precio_venta_pen: 45
+    notas_internas: "PENDIENTE: cantidad en stock y si se vende también la loción (236 ml). La oferta 2 por S/ 90 aplica SOLO al splash línea clásica."
+    orden: 18
+    variantes:
+      - {sku: VS-PTR-01, nombre: Única, atributo: unico, stock: 0}
+
+  - slug: splash-pink-pineapple
+    nombre: Splash PINK Pineapple
+    marca: pink
+    categoria: fragancias
+    linea: Spritz mist hair & body 236 ml
+    descripcion: Spritz de cabello y cuerpo PINK Pineapple (236 ml).
+    precio_venta_pen: 45
+    notas_internas: "PENDIENTE: cantidad en stock."
+    orden: 19
+    variantes:
+      - {sku: PK-PIN-01, nombre: Única, atributo: unico, stock: 0}

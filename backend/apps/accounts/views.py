@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib.auth import authenticate, get_user_model, login, logout
 from django.contrib.auth.tokens import default_token_generator
 from django.core.exceptions import ValidationError as DjangoValidationError
@@ -17,6 +18,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from apps.core.api import CsrfProtectedMixin, ScopedThrottleMixin
+from apps.core.ip import client_ip
 
 from .models import Consent, Customer
 from .serializers import (
@@ -32,7 +34,7 @@ User = get_user_model()
 
 
 def _client_ip(request):
-    return request.META.get("REMOTE_ADDR") or None
+    return client_ip(request)
 
 
 @method_decorator(ensure_csrf_cookie, name="dispatch")
@@ -168,8 +170,10 @@ class PasswordResetRequestView(CsrfProtectedMixin, ScopedThrottleMixin, APIView)
             uid = urlsafe_base64_encode(force_bytes(user.pk))
             token = default_token_generator.make_token(user)
             send_mail(
-                "Restablece tu contraseña",
-                f"Usa este enlace para elegir una nueva contraseña: /restablecer?uid={uid}&token={token}",
+                f"Restablece tu contraseña de {settings.STORE_NAME}",
+                "Hola,\n\nUsa este enlace para elegir una nueva contraseña (vence en unas horas):\n"
+                f"{settings.SITE_URL}/restablecer?uid={uid}&token={token}\n\n"
+                "Si no lo pediste tú, ignora este mensaje.",
                 None,
                 [user.email],
             )
