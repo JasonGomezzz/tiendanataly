@@ -40,8 +40,8 @@ function Login({ onDone }: { onDone: () => void }) {
   }
 
   return (
-    <div className="mx-auto flex min-h-screen max-w-sm flex-col justify-center px-5">
-      <Image src="/brand/logo-640.png" alt="Marle Fashion" width={96} height={96} className="mx-auto mb-4 h-24 w-24 rounded-full" />
+    <main className="mx-auto flex min-h-screen max-w-sm flex-col justify-center px-5">
+      <Image src="/brand/logo-640.png" alt="Marle Fashion" width={96} height={96} priority className="mx-auto mb-4 h-24 w-24 rounded-full" />
       <p className="text-center text-[11px] font-medium uppercase tracking-[0.3em] text-rose-text">Panel de administración</p>
       <h1 className="mt-3 text-center font-serif text-4xl">Ingresar</h1>
       <form onSubmit={submit} className="mt-8 space-y-4">
@@ -56,7 +56,7 @@ function Login({ onDone }: { onDone: () => void }) {
         {error && <p role="alert" className="text-sm text-rose-text">{error}</p>}
         <button disabled={busy} className={btnPrimary}>{busy ? "Verificando…" : "Entrar"}</button>
       </form>
-    </div>
+    </main>
   );
 }
 
