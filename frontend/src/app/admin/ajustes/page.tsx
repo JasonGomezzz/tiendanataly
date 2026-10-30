@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useAdmin } from "@/components/admin/AdminShell";
+import { BankAccounts } from "@/components/admin/BankAccounts";
 import { btnPrimary, inputClass, labelClass } from "@/components/ui";
 import { dateTime } from "@/lib/admin";
 import { api, ApiError, messageFrom } from "@/lib/client";
@@ -79,6 +80,8 @@ export default function SettingsPage() {
         ))}
         <button className={btnPrimary}>Guardar ajustes</button>
       </form>
+
+      {can("payments.change_bankaccount") && <BankAccounts />}
 
       {can("core.view_auditlog") && (
         <section aria-labelledby="aud" className="space-y-3">
