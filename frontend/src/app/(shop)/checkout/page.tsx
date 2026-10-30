@@ -124,7 +124,7 @@ export default function CheckoutPage() {
 
         <fieldset className="space-y-3 text-sm">
           <legend className="mb-2 font-serif text-2xl">3. Pago</legend>
-          <p className="text-umber">Al confirmar, reservamos tus productos por {store?.minutos_reserva ?? 15} minutos. En el siguiente paso pagas con <strong>Yape o Plin</strong> y subes tu captura; verificamos tu pago y te avisamos.</p>
+          <p className="text-umber">Al confirmar, reservamos tus productos por {store?.minutos_reserva ?? 15} minutos. En el siguiente paso eliges cómo pagar (<strong>Yape, Plin o transferencia</strong>) y subes tu captura; verificamos tu pago y te avisamos.</p>
           <label className="flex items-start gap-3"><input type="checkbox" required checked={privacy} onChange={(e) => setPrivacy(e.target.checked)} className="mt-1" /><span>Acepto la <Link href="/privacidad" target="_blank" className="underline underline-offset-4">política de privacidad</Link> y el uso de mis datos para gestionar mi pedido.</span></label>
           <label className="flex items-start gap-3"><input type="checkbox" required checked={terms} onChange={(e) => setTerms(e.target.checked)} className="mt-1" /><span>Acepto los <Link href="/terminos" target="_blank" className="underline underline-offset-4">términos y condiciones</Link>.</span></label>
           <label className="flex items-start gap-3 text-umber"><input type="checkbox" checked={marketing} onChange={(e) => setMarketing(e.target.checked)} className="mt-1" /><span>Quiero recibir novedades y ofertas por WhatsApp (opcional).</span></label>

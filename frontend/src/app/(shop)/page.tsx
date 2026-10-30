@@ -102,7 +102,7 @@ export default async function Home() {
       <section className="mx-auto mt-24 max-w-7xl px-4 sm:px-8" aria-label="Por qué comprar aquí">
         <ul className="grid gap-px bg-stone/30 text-center sm:grid-cols-3">
           {[
-            ["Paga fácil", "Yape, Plin o tarjeta. Tu pedido queda reservado mientras pagas."],
+            ["Paga fácil", "Yape, Plin o transferencia. Tu pedido queda reservado mientras pagas."],
             ["Entrega en Lima", "Delivery o recojo. Envíos a provincias con courier."],
             ["Atención personal", "Escríbenos por WhatsApp y te ayudamos a elegir."],
           ].map(([title, text]) => (

@@ -81,7 +81,7 @@ export default async function ProductPage({ params }: Params) {
           )}
           <div className="mt-3 flex flex-wrap items-center gap-3">
             <span className="text-xs text-umber">Paga con</span>
-            <PayBadges />
+            <PayBadges card={store?.payments_provider === "culqi"} />
           </div>
 
           <ProductBuy

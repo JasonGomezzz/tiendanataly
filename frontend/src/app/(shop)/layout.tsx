@@ -19,7 +19,7 @@ export default async function ShopLayout({ children }: { children: React.ReactNo
         Saltar al contenido
       </a>
       <CartProvider>
-        <p className="bg-paper py-2 text-center text-[11px] uppercase tracking-[0.14em] text-umber">Envíos en Lima · Paga con Yape, Plin o tarjeta</p>
+        <p className="bg-paper py-2 text-center text-[11px] uppercase tracking-[0.14em] text-umber">Envíos en Lima · Paga con Yape, Plin o transferencia{store?.payments_provider === "culqi" ? " o tarjeta" : ""}</p>
         <Header name={name} />
         <main id="contenido">{children}</main>
         <CartDrawer />
@@ -40,7 +40,7 @@ export default async function ShopLayout({ children }: { children: React.ReactNo
           </nav>
           <div className="text-xs leading-relaxed">
             <p className="uppercase tracking-[0.14em]">Pagos</p>
-            <p className="mt-2">Yape, Plin y tarjeta.</p>
+            <p className="mt-2">Yape, Plin y transferencia bancaria{store?.payments_provider === "culqi" ? ", y tarjeta" : ""}.</p>
             {store?.whatsapp && (
               <a href={`https://wa.me/${store.whatsapp}`} className="mt-3 inline-block underline underline-offset-4 hover:text-ink">
                 Escríbenos por WhatsApp

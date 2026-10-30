@@ -79,10 +79,11 @@ export function Accordion({ title, children, open = false }: { title: string; ch
   );
 }
 
-export function PayBadges() {
+export function PayBadges({ card = false }: { card?: boolean }) {
+  const methods = ["Yape", "Plin", "Transferencia", ...(card ? ["Tarjeta"] : [])];
   return (
     <ul className="flex flex-wrap items-center gap-2" aria-label="Medios de pago">
-      {["Yape", "Plin", "Tarjeta"].map((m) => (
+      {methods.map((m) => (
         <li key={m} className="border border-stone/60 px-2.5 py-1 text-[10px] font-medium uppercase tracking-[0.14em] text-umber">
           {m}
         </li>

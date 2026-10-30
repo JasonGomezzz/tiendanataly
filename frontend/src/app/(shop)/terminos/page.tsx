@@ -12,7 +12,7 @@ export default function Terms() {
       </section>
       <section>
         <h2>Precios y pagos</h2>
-        <p>Los precios están en soles (S/). Aceptamos Yape, Plin y, cuando esté habilitado, tarjeta. El total, incluido el envío, se confirma al crear tu pedido. Un pedido se considera pagado cuando verificamos tu comprobante.</p>
+        <p>Los precios están en soles (S/). Aceptamos Yape, Plin y transferencia bancaria (BCP e Interbank) y, cuando esté habilitado, tarjeta. El total, incluido el envío, se confirma al crear tu pedido. Un pedido se considera pagado cuando verificamos tu comprobante.</p>
       </section>
       <section>
         <h2>Reserva de productos</h2>
