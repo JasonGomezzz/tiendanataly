@@ -38,6 +38,8 @@ export type ProductDetail = ProductCard & {
 
 export type Paginated<T> = { count: number; next: string | null; previous: string | null; results: T[] };
 
+export type BankAccount = { id: number; banco: string; etiqueta: string; numero: string; cci: string; titular: string };
+
 export type StoreInfo = {
   nombre_tienda: string;
   whatsapp: string;
@@ -51,6 +53,7 @@ export type StoreInfo = {
   plin_titular: string;
   payments_provider: "manual_yape_plin" | "culqi";
   culqi_public_key: string;
+  cuentas: BankAccount[];
 };
 
 export type Zone = {

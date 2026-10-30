@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { CulqiPay } from "@/components/CulqiPay";
-import { OrderLive, ProofUploader } from "@/components/OrderClient";
+import { OrderLive } from "@/components/OrderClient";
+import { PayMethods } from "@/components/PayMethods";
 import { getOrder, getStore } from "@/lib/api";
 import { STATE_LABEL, money, whatsappLink } from "@/lib/format";
 import type { OrderState } from "@/lib/types";
@@ -27,7 +27,6 @@ export default async function OrderPage({ params }: { params: Promise<{ token: s
   const due = Number(order.por_pagar);
   const paidDeposit = preorder && order.estado !== "PENDIENTE_PAGO" && due > 0;
   const canPay = due > 0 && !inReview && !closed;
-  const useCard = store?.payments_provider === "culqi" && !!store.culqi_public_key;
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-12 sm:px-8">
@@ -53,22 +52,11 @@ export default async function OrderPage({ params }: { params: Promise<{ token: s
 
       {canPay && (
         <section className="mt-10 border border-ink p-6" aria-labelledby="pagar">
-          <h2 id="pagar" className="font-serif text-2xl">{paidDeposit ? "Paga tu saldo de" : "Paga"} {money(order.por_pagar)}{useCard ? "" : " por Yape o Plin"}</h2>
+          <h2 id="pagar" className="font-serif text-2xl">{paidDeposit ? "Paga tu saldo de" : "Paga"} {money(order.por_pagar)}</h2>
           {rejected && <p role="alert" className="mt-3 text-sm text-rose-text">Tu comprobante anterior no pudo verificarse. Sube uno nuevo o escríbenos.</p>}
-          {useCard && <CulqiPay token={order.token} publicKey={store!.culqi_public_key} amount={order.por_pagar} storeName={store!.nombre_tienda} />}
-          {useCard && <p className="mt-6 text-xs uppercase tracking-[0.16em] text-umber">O paga por Yape / Plin y sube tu captura</p>}
-          <dl className="mt-4 grid gap-3 text-sm sm:grid-cols-2">
-            {store?.yape_numero && (
-              <div className="bg-paper p-4"><dt className="text-[11px] uppercase tracking-[0.16em] text-umber">Yape</dt><dd className="mt-1 text-lg">{store.yape_numero}</dd><dd className="text-xs text-umber">{store.yape_titular}</dd></div>
-            )}
-            {store?.plin_numero && (
-              <div className="bg-paper p-4"><dt className="text-[11px] uppercase tracking-[0.16em] text-umber">Plin</dt><dd className="mt-1 text-lg">{store.plin_numero}</dd><dd className="text-xs text-umber">{store.plin_titular}</dd></div>
-            )}
-            {!store?.yape_numero && !store?.plin_numero && <p className="text-umber">Escríbenos por WhatsApp y te enviamos los datos de pago.</p>}
-          </dl>
           {preorder && !paidDeposit && <p className="mt-3 text-sm text-umber">Este pedido es por encargo: hoy pagas el adelanto. El saldo de {money(order.saldo_pen)} se paga cuando llegue a Lima.</p>}
           {order.expira_en && !preorder && order.estado === "PENDIENTE_PAGO" && <p className="mt-3 text-xs text-umber">Tus productos están reservados hasta las {new Date(order.expira_en).toLocaleTimeString("es-PE", { hour: "2-digit", minute: "2-digit", hour12: false, timeZone: "America/Lima" })} (hora de Lima). Sube tu captura antes.</p>}
-          <ProofUploader token={order.token} />
+          {store && <PayMethods token={order.token} store={store} amount={order.por_pagar} whatsappUrl={wa} />}
         </section>
       )}
 
