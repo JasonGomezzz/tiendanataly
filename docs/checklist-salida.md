@@ -19,14 +19,16 @@
 - [ ] Superusuario técnico creado; administradora y staff **sin** superusuario; 2FA activado con `enroll_2fa` y códigos de respaldo entregados.
 - [ ] Correo SMTP configurado (recuperar contraseña) y probado.
 - [ ] Respaldo copiado fuera del servidor y restauración probada en el servidor real.
-- [ ] Datos reales: WhatsApp, titular de Yape/Plin y de las cuentas, tipo de cambio, margen, zonas y costos de envío, reparto de los splash por fragancia y stock de pañalero, relojes, set de 4 splash y Peach.
+- [x] WhatsApp del negocio y titular de Yape/Plin y de las cuentas (la dueña), cargados en la base local desde `seed/negocio.local.yaml`.
+- [ ] Datos reales que faltan: tipo de cambio, margen, zonas y costos de envío, reparto de los splash por fragancia y stock de pañalero, relojes, set de 4 splash y Peach.
+- [ ] DNI de la dueña (lo pide ella misma; se usa en los documentos legales y de la pasarela, no en el sitio).
 - [x] Precios de venta confirmados: corazón negro S/ 130, corazón rojo S/ 120, plateado S/ 120, pañalero rosado S/ 130, reloj plateado bebe S/ 80, set reloj Aéropostale rosado S/ 100 (cargados en `seed/inventory.yaml`; los 3 bolsos corazón quedan publicados, el resto en borrador hasta tener stock).
 - [x] Más precios confirmados: mochila negra acolchada S/ 150, bandolero cuadrado S/ 130 (el negro; se asumió igual para el blanco), crema Cucumber S/ 40, splash clásica S/ 50 con **oferta 2 por S/ 90** (las dos unidades pueden ser de fragancias distintas) y set Guess Red S/ 180.
 - [x] Set de 3 mini perfumes Bombshell S/ 90 y set de 4 splash S/ 75 (publicados / en borrador según stock).
 - [x] Más precios: mochila rosa PINK S/ 85, bandolero cuadrado negro S/ 130 y **blanco S/ 120** (ahora son dos productos), splash vainilla y Midnight Marshmallow S/ 50, Piña Tropicale y PINK Pineapple S/ 45. La crema Cucumber (S/ 40) **no se promociona**: queda en borrador sin foto.
 - [ ] Precio pendiente: Peach (marca/línea sin confirmar). Stock pendiente de todo lo que está en borrador.
 - [x] Medios de pago cargados en la base local: Yape y Plin (mismo número), transferencia BCP e Interbank con su CCI. Los números **no están en el repositorio**: viven en `seed/negocio.local.yaml` (ignorado por git).
-- [ ] En producción: copiar `seed/negocio.local.yaml` al servidor y correr `python manage.py load_business_data`, o escribirlos en `/admin` → Ajustes (Yape/Plin y *Cuentas para transferencias*). Falta el **nombre del titular** de Yape/Plin y de las cuentas.
+- [ ] En producción: copiar `seed/negocio.local.yaml` al servidor y correr `python manage.py load_business_data`, o escribirlos en `/admin` → Ajustes (Yape/Plin y *Cuentas para transferencias*). El archivo ya incluye WhatsApp y titulares; al guardar desde `/admin` la tienda se actualiza al instante.
 - [ ] Fotos finales de producto (ver `docs/guia-fotos.md`) y logo oficial (`frontend/public/brand/logo.png`, ver `docs/marca.md`).
 - [ ] **Textos legales** revisados con un asesor: términos, privacidad (Ley 29733), cambios y devoluciones, **Libro de Reclamaciones** (verificar los requisitos vigentes de Indecopi para venta online y completar razón social/RUC en Ajustes).
 - [x] Decidido: la dueña vende como **persona natural sin RUC**. Pendiente: poner su nombre completo y DNI como titular en términos, privacidad y Libro de Reclamaciones (textos marcados con corchetes). Ojo: una actividad comercial habitual suele requerir inscribirse en SUNAT (RUC y régimen), y es probable que Culqi y otras pasarelas lo pidan para abrir la cuenta; confírmalo con un contador antes de depender de la pasarela. La facturación electrónica sigue fuera de alcance (los campos RUC/DNI ya existen).
