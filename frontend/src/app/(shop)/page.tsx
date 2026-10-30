@@ -21,7 +21,7 @@ export default async function Home() {
     <>
       <section className="bg-blush">
         <div className="mx-auto grid max-w-7xl items-center gap-8 px-4 py-10 sm:px-8 lg:grid-cols-2 lg:py-16">
-          <div className="order-2 lg:order-1">
+          <div>
             <p className="text-[11px] font-medium uppercase tracking-[0.24em] text-rose-text">Nuevas llegadas</p>
             <h1 className="mt-4 font-serif text-5xl leading-[1.05] text-umber-dark sm:text-6xl">
               Bolsos, mochilas y fragancias que enamoran
@@ -38,7 +38,7 @@ export default async function Home() {
               )}
             </div>
           </div>
-          <div className="order-1 lg:order-2">
+          <div>
             <div className="relative mx-auto aspect-4/5 max-w-md bg-paper">
               {featured?.imagen_principal && (
                 <Image src={featured.imagen_principal} alt={featured.nombre} fill priority fetchPriority="high" quality={60} sizes="(min-width: 640px) 448px, 85vw" className="object-cover" />

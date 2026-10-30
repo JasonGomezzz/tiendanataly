@@ -8,7 +8,7 @@ const STYLE: Record<PayKind, { bg: string; text: string }> = {
   yape: { bg: "#742284", text: "Yape" },
   plin: { bg: "linear-gradient(135deg,#00c9e0,#2d6df6)", text: "plin" },
   bcp: { bg: "#002a8d", text: "BCP" },
-  interbank: { bg: "#00a651", text: "Interbank" },
+  interbank: { bg: "#00793a", text: "Interbank" },
   tarjeta: { bg: "#1c1410", text: "" },
   otro: { bg: "#605b51", text: "Banco" },
 };
@@ -20,7 +20,7 @@ export function PayLogo({ kind, size = 56, label }: { kind: PayKind; size?: numb
       role="img"
       aria-label={label ?? s.text ?? kind}
       className="relative inline-flex shrink-0 items-center justify-center overflow-hidden rounded-xl font-semibold text-white"
-      style={{ width: size, height: size, background: s.bg, fontSize: size * (s.text.length > 5 ? 0.17 : 0.27) }}
+      style={{ width: size, height: size, background: s.bg, fontSize: size * (s.text.length > 5 ? 0.19 : 0.27) }}
     >
       {kind === "tarjeta" ? (
         <svg viewBox="0 0 32 24" width={size * 0.62} aria-hidden="true" fill="none">

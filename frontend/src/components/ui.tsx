@@ -57,7 +57,7 @@ export function ProductCard({ product, priority = false }: { product: Card; prio
       </div>
       <div className="pt-3">
         <p className="text-[11px] uppercase tracking-[0.16em] text-umber">{product.marca.nombre}</p>
-        <h3 className="mt-0.5 text-sm font-medium uppercase tracking-wide">{product.nombre}</h3>
+        <p className="mt-0.5 text-sm font-medium uppercase tracking-wide">{product.nombre}</p>
         <p className="mt-1 text-sm">{money(product.precio_venta_pen)}</p>
         {offerText(product) && <p className="mt-1 inline-block bg-blush px-2 py-0.5 text-[11px] font-medium uppercase tracking-[0.14em] text-rose-text">Oferta {offerText(product)}</p>}
       </div>
