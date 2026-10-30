@@ -105,7 +105,7 @@ export default async function Shop({ searchParams }: { searchParams: Promise<SP>
         ) : (
           <ul className="grid grid-cols-2 gap-x-4 gap-y-10 sm:grid-cols-3">
             {products.map((p, i) => (
-              <li key={p.slug}><ProductCard product={p} priority={i < 3} /></li>
+              <li key={p.slug}><ProductCard product={p} priority={i < 2} /></li>
             ))}
           </ul>
         )}

@@ -43,6 +43,7 @@ export function ProductCard({ product, priority = false }: { product: Card; prio
             alt={product.nombre}
             fill
             priority={priority}
+            fetchPriority={priority ? "high" : undefined}
             sizes="(min-width: 1024px) 25vw, (min-width: 640px) 33vw, 50vw"
             className={`object-cover transition-transform duration-500 group-hover:scale-[1.03] ${product.agotado ? "opacity-60" : ""}`}
           />
