@@ -24,9 +24,6 @@ updates:
       # @types/node debe seguir la versión de Node que corre en producción (22 LTS).
       - dependency-name: "@types/node"
         update-types: ["version-update:semver-major"]
-      # TypeScript sube de mayor cuando Next.js lo soporte, no antes.
-      - dependency-name: "typescript"
-        update-types: ["version-update:semver-major"]
   - package-ecosystem: docker
     directory: /backend
     schedule:
