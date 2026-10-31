@@ -1,0 +1,7 @@
+# Los archivos que se ejecutan o montan dentro de contenedores Linux deben quedar con fin de línea LF
+# también al clonar en Windows; con CRLF los scripts de shell fallan.
+*.sh text eol=lf
+Caddyfile text eol=lf
+Dockerfile* text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
