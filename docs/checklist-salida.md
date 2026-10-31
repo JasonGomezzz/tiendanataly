@@ -18,7 +18,9 @@
 - [ ] `.env.prod` completo; `DJANGO_SECRET_KEY`, contraseñas y `ADMIN_URL_PATH` generados al azar; `DJANGO_DEBUG=false`.
 - [ ] Superusuario técnico creado; administradora y staff **sin** superusuario; 2FA activado con `enroll_2fa` y códigos de respaldo entregados.
 - [ ] Correo SMTP configurado (recuperar contraseña) y probado.
-- [ ] Respaldo copiado fuera del servidor y restauración probada en el servidor real.
+- [ ] Respaldo copiado **fuera** del servidor, cifrado, con aviso si falla (`BACKUP_OFFSITE`, `.env.offsite` y `BACKUP_PING_URL`; ver `docs/respaldos.md`) y restauración probada en el servidor real. Es lo más importante de la lista.
+- [ ] Sentry (plan gratuito) con `SENTRY_DSN` en `.env.prod`, y un chequeo externo gratuito a `/health/` (ver `docs/despliegue.md`, sección 6).
+- [ ] En el servidor: `chmod 600 .env.prod .env.offsite`, firewall solo con 22/80/443, y confirmar con `docker compose ps` que `db` y `redis` no publican puertos y que hay **una sola** instancia de `beat`.
 - [x] WhatsApp del negocio y titular de Yape/Plin y de las cuentas (la dueña), cargados en la base local desde `seed/negocio.local.yaml`.
 - [ ] Datos reales que faltan: tipo de cambio, margen, zonas y costos de envío, reparto de los splash por fragancia y stock de pañalero, relojes, set de 4 splash y Peach.
 - [x] El DNI de la dueña **no hace falta** para la tienda: no se muestra en el sitio ni se guarda en el sistema. Solo lo pedirían Culqi, el banco o SUNAT si ella abre una cuenta o un RUC, y lo escribe ella misma en esos formularios oficiales (nunca en un chat).
@@ -43,7 +45,12 @@
 - [ ] Registrar el webhook en CulqiPanel y probar un cargo, un rechazo y un reintento.
 - [ ] `PAYMENTS_PROVIDER=culqi` + llaves en `.env.prod`; configurar la comisión real en Ajustes y recalcular precios.
 
+## Mejoras futuras (no bloquean el lanzamiento)
+
+- [ ] Autocompletar direcciones y envío por distancia en Lima con Google; tarifas de couriers para provincias. Diseño, costos y salvaguardas en `docs/direcciones-y-envio.md` (sesiones de autocompletado, llamadas a Routes desde Django con caché, alertas de presupuesto).
+- [ ] Sentry también en el frontend (hay que ajustar la CSP y evitar datos personales).
+
 ## Operación continua
-- Activar la CI: copiar `infra/github-ci.yml.example` a `.github/workflows/ci.yml` (requiere permiso `workflow` en GitHub). Revisar semanalmente los PR de Dependabot y su resultado.
+- La CI ya corre en cada cambio (`.github/workflows/ci.yml`). Revisar semanalmente los PR de Dependabot y su resultado.
 - Probar la restauración de respaldos cada mes.
 - Rotar `CULQI_SECRET_KEY`, `REVALIDATE_SECRET`, `N8N_WEBHOOK_SECRET` si alguna vez se exponen.
