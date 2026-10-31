@@ -7,16 +7,19 @@ Monorepo con **Django + DRF + PostgreSQL** (backend), **Next.js (App Router) + T
 
 ## Estado
 
-| Fase | Contenido | Rama | Estado |
-|---|---|---|---|
-| 1. Base | Monorepo, modelos, seed, API base, admin con roles, auth segura, tests | `feat/fase-1-base` | Hecha |
-| 2. Vitrina | Catálogo, producto, bolsa, reserva atómica, WhatsApp, Yape/Plin manual, SEO | `feat/fase-2-vitrina` | Hecha |
-| 3. Pagos y estados | Culqi (sin validar contra sandbox), webhooks verificados, n8n, encargos con adelanto | `feat/fase-3-pagos` | Hecha |
-| 4. Panel `/admin` en Next.js | Dashboard, alta de producto con cámara, calculadora, tablero de pedidos | `feat/fase-4-panel-admin` | Hecha |
-| 5. Endurecimiento y salida | 2FA, IP real tras proxy, CSP, respaldos, CI, carga, compose de producción | `feat/fase-5-salida` | Hecha (ver `docs/checklist-salida.md`) |
-| Datos reales | Catálogo con precios y fotos propias (20 productos), logo de la marca, fotos de mesa con fondo quitado | `feat/datos-reales` | Hecha |
-| Ofertas | Oferta «N por S/ X» por producto (aplicada en bolsa, checkout y pedido) | `feat/ofertas` | Hecha |
-| Medios de pago | Yape, Plin y transferencia (BCP, Interbank) con imagen de referencia y botón de copiar; cuentas editables en el panel | `feat/medios-de-pago` | Hecha |
+Todo el trabajo está unido en `main`. Lo que falta para abrir al público (dominio, servidor, cuentas externas y datos del negocio) está en [docs/checklist-salida.md](docs/checklist-salida.md).
+
+| Etapa | Contenido | Estado |
+|---|---|---|
+| 1. Base | Monorepo, modelos, seed, API base, admin con roles, auth segura, tests | Hecha |
+| 2. Vitrina | Catálogo, producto, bolsa, reserva atómica, WhatsApp, Yape/Plin manual, SEO | Hecha |
+| 3. Pagos y estados | Culqi (sin validar contra sandbox), webhooks verificados, n8n, encargos con adelanto | Hecha |
+| 4. Panel `/admin` en Next.js | Dashboard, alta de producto con cámara, calculadora, tablero de pedidos | Hecha |
+| 5. Endurecimiento y salida | 2FA, IP real tras proxy, CSP, respaldos, CI, carga, compose de producción | Hecha |
+| Datos reales | Catálogo con precios y fotos propias (20 productos), logo de la marca, fotos de mesa con fondo quitado | Hecha |
+| Ofertas | Oferta «N por S/ X» por producto (aplicada en bolsa, checkout y pedido) | Hecha |
+| Medios de pago | Yape, Plin y transferencia (BCP, Interbank) con imagen de referencia y botón de copiar; cuentas editables en el panel | Hecha |
+| Producción | Respaldos con copia externa cifrada y aviso, healthchecks, un solo `beat`, Sentry opcional | Hecha; falta crear las cuentas externas |
 
 Documentación: [despliegue](docs/despliegue.md) · [VPS o Vercel](docs/hosting-opciones.md) · [direcciones y envío con Google](docs/direcciones-y-envio.md) · [respaldos](docs/respaldos.md) · [checklist de salida](docs/checklist-salida.md) · [Culqi y n8n](docs/pagos-culqi.md) · [marca](docs/marca.md) · [guía de fotos](docs/guia-fotos.md).
 
