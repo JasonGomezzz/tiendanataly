@@ -36,4 +36,5 @@ backups/*.dump
 Thumbs.db
 celerybeat-schedule*
 !.env.prod.example
+!.env.offsite.example
 seed/*.local.yaml

@@ -18,8 +18,10 @@ x-backend: &backend
     db:
       condition: service_healthy
     redis:
-      condition: service_started
+      condition: service_healthy
 
+# Seguridad de red: db y redis NO publican puertos al servidor; solo los ve el resto de los contenedores.
+# Los secretos viven en .env.prod (fuera de git; en el servidor: chmod 600 .env.prod).
 services:
   db:
     image: postgres:17-alpine
@@ -39,6 +41,11 @@ services:
   redis:
     image: redis:7-alpine
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
 
   backend:
     <<: *backend
@@ -58,6 +65,8 @@ services:
     <<: *backend
     command: celery -A config worker -l info --concurrency 2
 
+  # UNA sola instancia de beat. Con dos, cada tarea programada se ejecuta dos veces.
+  # Si alguna vez escalas el worker (--scale worker=N), deja beat en 1.
   beat:
     <<: *backend
     command: celery -A config beat -l info --schedule /tmp/celerybeat-schedule
@@ -75,6 +84,12 @@ services:
       REVALIDATE_SECRET: ${REVALIDATE_SECRET}
     depends_on:
       - backend
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))"]
+      interval: 15s
+      timeout: 5s
+      retries: 6
+      start_period: 20s
 
   caddy:
     image: caddy:2-alpine
@@ -104,6 +119,14 @@ services:
       PGPASSWORD: ${POSTGRES_PASSWORD}
       PGDATABASE: ${POSTGRES_DB}
       BACKUP_KEEP_DAYS: ${BACKUP_KEEP_DAYS:-14}
+      # Copia FUERA del servidor (rclone) y aviso si el respaldo falla o deja de llegar. Ver docs/respaldos.md.
+      BACKUP_OFFSITE: ${BACKUP_OFFSITE:-}
+      BACKUP_OFFSITE_KEEP_DAYS: ${BACKUP_OFFSITE_KEEP_DAYS:-30}
+      BACKUP_PING_URL: ${BACKUP_PING_URL:-}
+    # Credenciales de la copia externa (RCLONE_CONFIG_*): archivo aparte y opcional, sin los secretos de Django.
+    env_file:
+      - path: .env.offsite
+        required: false
     volumes:
       - ./scripts:/scripts:ro
       - backups:/backups
@@ -112,7 +135,7 @@ services:
       db:
         condition: service_healthy
     # Una copia al arrancar y luego cada 24 h (03:00 aprox. si el servicio se levanta a esa hora).
-    command: sh -c "while true; do sh /scripts/backup.sh; sleep 86400; done"
+    command: sh -c "apk add --no-cache rclone >/dev/null 2>&1 || echo 'AVISO - no se pudo instalar rclone, no habra copia externa'; while true; do sh /scripts/backup.sh || echo 'ERROR - el respaldo fallo'; sleep 86400; done"
 
 volumes:
   pgdata:

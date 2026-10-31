@@ -74,4 +74,20 @@ Las fotos y comprobantes viven en el disco del VPS (volumen `media`), se sirven 
 - `docker compose ... ps` y `logs -f backend` ante cualquier reclamo.
 - Un chequeo externo gratuito (UptimeRobot o similar) a `https://TU-DOMINIO/health/`.
 - Revisa `/admin` → pedidos "Pendiente de pago" con comprobante: es la tarea diaria de la administradora.
-- Dependabot (`.github/dependabot.yml`) avisa de actualizaciones y vulnerabilidades. Para activar la CI copia `infra/github-ci.yml.example` a `.github/workflows/ci.yml` (el token con el que se subió este código no tenía permiso `workflow`; hazlo desde la web de GitHub o con un token que lo incluya).
+- Dependabot (`.github/dependabot.yml`) avisa de actualizaciones y vulnerabilidades, y la CI (`.github/workflows/ci.yml`) corre en cada cambio.
+- **Sentry (opcional, plan gratuito):** crea un proyecto de Django, copia su DSN a `SENTRY_DSN` en `.env.prod` y reinicia el backend. Reporta errores del sitio y de las tareas de Celery **sin** datos personales (sin IP, cookies ni cuerpos de peticiones). El frontend aún no reporta a Sentry: ante un fallo en la tienda mira `logs frontend`.
+- **Aviso de respaldos:** `BACKUP_PING_URL` (ver `docs/respaldos.md`).
+
+## 6. Lista de producción (resumen)
+
+| Punto | Estado |
+|---|---|
+| Respaldo diario de PostgreSQL y fotos | Hecho; verifica cada volcado y se restaura (ver `docs/respaldos.md`) |
+| Copia **fuera** del servidor, cifrada | Hecho en el código; falta crear la cuenta del almacenamiento y llenar `.env.offsite` |
+| Aviso si un respaldo falla o no llega | Hecho en el código; falta crear el monitor y poner `BACKUP_PING_URL` |
+| `db` y `redis` sin puertos publicados | Hecho: solo los ve la red interna de Docker; el firewall deja pasar solo 22, 80 y 443 |
+| Secretos en variables de entorno | Hecho: `.env.prod` y `.env.offsite` fuera de git; en el servidor `chmod 600 .env.prod .env.offsite` |
+| `restart: unless-stopped` y healthchecks | Hecho en todos los servicios; healthcheck en base, Redis, backend y tienda |
+| gunicorn en vez de `runserver` | Hecho (3 workers) |
+| Una sola instancia de `beat` | Hecho; no escalar `beat` (el worker sí se puede escalar) |
+| Avisos de errores (Sentry) | Hecho en el backend, apagado hasta poner `SENTRY_DSN`; falta el frontend |
