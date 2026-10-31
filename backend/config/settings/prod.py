@@ -1,3 +1,5 @@
+from config.observability import init_sentry
+
 from .base import *  # noqa: F401,F403
 from .base import env
 
@@ -15,3 +17,6 @@ SECURE_HSTS_PRELOAD = True
 ADMIN_REQUIRE_2FA = True
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+
+# Avisos de errores (opcional; ver docs/despliegue.md). Sin SENTRY_DSN queda apagado.
+init_sentry(env("SENTRY_DSN", default=""), environment=env("SENTRY_ENVIRONMENT", default="production"))
