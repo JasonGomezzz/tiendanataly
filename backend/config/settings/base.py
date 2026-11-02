@@ -202,6 +202,7 @@ REST_FRAMEWORK = {
         "password_reset": env("THROTTLE_PASSWORD_RESET", default="5/hour"),
         "checkout": env("THROTTLE_CHECKOUT", default="10/min"),
         "complaint": env("THROTTLE_COMPLAINT", default="5/hour"),
+        "places": env("THROTTLE_PLACES", default="40/min"),
     },
 }
 
@@ -214,6 +215,16 @@ CELERY_TASK_ALWAYS_EAGER = False
 # --- Negocio ----------------------------------------------------------------
 STORE_NAME = env("STORE_NAME", default="Marle Fashion")
 SITE_URL = env("NEXT_PUBLIC_SITE_URL", default="http://localhost:3000").rstrip("/")
+
+# --- Google Maps (opcional: sin llaves, la tienda funciona igual con direcciones escritas a mano) --------
+# Llave PÚBLICA del mapa del punto de recojo (Maps Embed API): se restringe por dominio en Google Cloud.
+GOOGLE_MAPS_EMBED_KEY = env("GOOGLE_MAPS_EMBED_KEY", default="")
+# Llave SECRETA de direcciones sugeridas (Places API nueva): solo vive en el servidor, nunca llega al navegador.
+GOOGLE_PLACES_KEY = env("GOOGLE_PLACES_KEY", default="")
+# Tope propio por día (autocompletar y detalle por separado): el costo nunca pasa de lo previsto aunque algo falle.
+GOOGLE_PLACES_DAILY_LIMIT = env.int("GOOGLE_PLACES_DAILY_LIMIT", default=300)
+# Solo cambia en pruebas locales con un Google simulado; en producción no se toca.
+GOOGLE_PLACES_BASE = env("GOOGLE_PLACES_BASE", default="https://places.googleapis.com/v1")
 
 # Correo (recuperar contraseña). En desarrollo se imprime en consola.
 EMAIL_HOST = env("EMAIL_HOST", default="")

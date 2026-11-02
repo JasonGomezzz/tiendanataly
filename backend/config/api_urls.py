@@ -10,6 +10,7 @@ from apps.legal.api import ComplaintCreateView
 from apps.orders.api import CheckoutView, MyOrderViewSet, OrderWhatsappView, TrackOrderView
 from apps.payments.api import CulqiChargeView, CulqiOrderView, CulqiWebhookView, ManualPaymentView
 from apps.shipping.api import ShippingZoneViewSet
+from apps.shipping.places_api import PlacesAutocompleteView, PlacesDetailView
 
 router = SimpleRouter()
 router.register("products", catalog_api.ProductViewSet, basename="product")
@@ -34,6 +35,8 @@ urlpatterns = [
     path("auth/", include(auth_patterns)),
     path("me/", account_views.MeView.as_view()),
     path("store-settings/public/", PublicStoreSettingsView.as_view()),
+    path("places/autocomplete/", PlacesAutocompleteView.as_view()),
+    path("places/detail/", PlacesDetailView.as_view()),
     path("variants/<int:variant_id>/stock-alerts/", catalog_api.StockAlertCreateView.as_view()),
     path("cart/", cart_api.CartView.as_view()),
     path("cart/items/", cart_api.CartItemsView.as_view()),
