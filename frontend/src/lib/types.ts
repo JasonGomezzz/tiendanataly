@@ -54,6 +54,10 @@ export type StoreInfo = {
   payments_provider: "manual_yape_plin" | "culqi";
   culqi_public_key: string;
   cuentas: BankAccount[];
+  punto_recojo_nombre: string;
+  punto_recojo_direccion: string;
+  mapa_embed_key: string;
+  direcciones_google: boolean;
 };
 
 export type Zone = {

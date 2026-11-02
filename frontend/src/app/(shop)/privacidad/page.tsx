@@ -28,6 +28,10 @@ export default function Privacy() {
         </ul>
       </section>
       <section>
+        <h2>Servicios de terceros</h2>
+        <p>El mapa del punto de recojo y las sugerencias de dirección las ofrece Google. Si usas las sugerencias, lo que escribes en el campo de dirección se envía a Google para completarlo; si prefieres no hacerlo, puedes escribir tu dirección completa a mano sin elegir ninguna sugerencia. No compartimos tus datos con Google para publicidad.</p>
+      </section>
+      <section>
         <h2>Tus derechos</h2>
         <p>Puedes acceder, rectificar, cancelar u oponerte al tratamiento de tus datos. Desde tu cuenta puedes eliminar tus datos personales; tus pedidos se conservan de forma anónima por obligaciones contables. También puedes escribirnos por WhatsApp.</p>
       </section>

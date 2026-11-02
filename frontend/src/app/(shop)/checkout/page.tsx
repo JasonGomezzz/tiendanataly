@@ -3,7 +3,9 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
+import { AddressSuggest } from "@/components/AddressSuggest";
 import { useCart } from "@/components/CartProvider";
+import { MapaRecojo } from "@/components/MapaRecojo";
 import { btnPrimary, inputClass, labelClass } from "@/components/ui";
 import { api, ApiError, messageFrom, sessionInfo } from "@/lib/client";
 import { money } from "@/lib/format";
@@ -115,10 +117,21 @@ export default function CheckoutPage() {
                 <div><label className={labelClass} htmlFor="prov">Provincia</label><input id="prov" required value={form.provincia} onChange={set("provincia")} className={inputClass} /></div>
                 <div><label className={labelClass} htmlFor="dist">Distrito</label><input id="dist" required value={form.distrito} onChange={set("distrito")} className={inputClass} /></div>
               </div>
-              <div><label className={labelClass} htmlFor="dir">Dirección</label><input id="dir" required autoComplete="street-address" value={form.direccion} onChange={set("direccion")} className={inputClass} /></div>
+              <div>
+                <label className={labelClass} htmlFor="dir">Dirección</label>
+                <AddressSuggest
+                  id="dir"
+                  enabled={Boolean(store?.direcciones_google)}
+                  value={form.direccion}
+                  onChange={(direccion) => setForm((f) => ({ ...f, direccion }))}
+                  onPick={(a) => setForm((f) => ({ ...f, direccion: a.direccion, distrito: a.distrito || f.distrito, provincia: a.provincia || f.provincia, departamento: a.departamento || f.departamento }))}
+                />
+                {store?.direcciones_google && <p className="mt-1 text-xs text-umber">Escribe tu dirección y elige una sugerencia; también puedes llenarla a mano.</p>}
+              </div>
               <div><label className={labelClass} htmlFor="ref">Referencia (opcional)</label><input id="ref" value={form.referencia} onChange={set("referencia")} className={inputClass} /></div>
             </div>
           )}
+          {!needsAddress && <MapaRecojo store={store} />}
           <div><label className={labelClass} htmlFor="notas">Notas para tu pedido (opcional)</label><textarea id="notas" rows={2} value={form.notas} onChange={set("notas")} className={inputClass} /></div>
         </fieldset>
 

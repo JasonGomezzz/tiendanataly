@@ -13,7 +13,8 @@ const csp = [
   "style-src 'self' 'unsafe-inline' https://*.culqi.com",
   "font-src 'self' data: https://*.culqi.com",
   "connect-src 'self' https://*.culqi.com",
-  "frame-src https://*.culqi.com",
+  // El mapa del punto de recojo es un iframe de Google Maps (Maps Embed API).
+  "frame-src https://*.culqi.com https://www.google.com",
   "frame-ancestors 'none'",
   "base-uri 'self'",
   "form-action 'self'",
