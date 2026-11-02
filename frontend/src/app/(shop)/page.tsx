@@ -7,7 +7,7 @@ import { whatsappLink } from "@/lib/format";
 
 export default async function Home() {
   const [all, last, categories, store] = await Promise.all([
-    getProducts({ ordering: "orden" }),
+    getProducts({ ordering: "orden", page_size: "60" }),
     getProducts({ ultimas: "true" }),
     getCategories(),
     getStore(),
@@ -15,6 +15,8 @@ export default async function Home() {
   const products = all?.results ?? [];
   const lastUnits = last?.results ?? [];
   const featured = products.find((p) => p.imagen_principal) ?? null;
+  // Una categoría sin productos publicados con foto se oculta: un recuadro gris vacío se ve como un error.
+  const shownCategories = (categories ?? []).filter((c) => products.some((p) => p.categoria.slug === c.slug && p.imagen_principal));
   const wa = whatsappLink(store?.whatsapp, "Hola, quisiera más información sobre sus productos.");
 
   return (
@@ -48,11 +50,11 @@ export default async function Home() {
         </div>
       </section>
 
-      {categories && categories.length > 0 && (
+      {shownCategories.length > 0 && (
         <section className="mx-auto max-w-7xl px-4 pt-16 sm:px-8" aria-labelledby="cats">
           <h2 id="cats" className="sr-only">Categorías</h2>
-          <ul className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-            {categories.map((c) => {
+          <ul className={`grid grid-cols-2 gap-3 ${shownCategories.length === 3 ? "sm:grid-cols-3" : shownCategories.length === 2 ? "sm:grid-cols-2" : "sm:grid-cols-4"}`}>
+            {shownCategories.map((c) => {
               const sample = products.find((p) => p.categoria.slug === c.slug && p.imagen_principal);
               return (
                 <li key={c.slug}>

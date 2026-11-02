@@ -26,12 +26,17 @@ export default async function Shop({ searchParams }: { searchParams: Promise<SP>
   const precio_max = one(sp.precio_max);
   const ordering = one(sp.ordering);
 
-  const [data, categories, brands] = await Promise.all([
+  const [data, catalog, categories, brands] = await Promise.all([
     getProducts({ search: q, categoria, marca, ultimas, disponible, precio_min, precio_max, ordering }),
+    getProducts({ page_size: "100" }),
     getCategories(),
     getBrands(),
   ]);
   const products = data?.results ?? [];
+  // Los filtros solo ofrecen categorías y marcas con productos publicados (la elegida se conserva siempre).
+  const published = catalog?.results ?? [];
+  const withProducts = <T extends { slug: string }>(items: T[] | null | undefined, key: "categoria" | "marca", selected?: string) =>
+    (items ?? []).filter((it) => it.slug === selected || published.some((p) => p[key].slug === it.slug));
 
   const href = (patch: Record<string, string | undefined>) => {
     const next = { q, categoria, marca, ultimas, disponible, precio_min, precio_max, ordering, ...patch };
@@ -46,14 +51,14 @@ export default async function Shop({ searchParams }: { searchParams: Promise<SP>
       <section aria-labelledby="f-cat">
         <h2 id="f-cat" className="mb-2 text-[11px] font-medium uppercase tracking-[0.18em]">Categoría</h2>
         <Link href={href({ categoria: undefined })} className={chip(!categoria)}>Todas</Link>
-        {categories?.map((c) => (
+        {withProducts(categories, "categoria", categoria).map((c) => (
           <Link key={c.slug} href={href({ categoria: c.slug })} className={chip(categoria === c.slug)}>{c.nombre}</Link>
         ))}
       </section>
       <section aria-labelledby="f-marca">
         <h2 id="f-marca" className="mb-2 text-[11px] font-medium uppercase tracking-[0.18em]">Marca</h2>
         <Link href={href({ marca: undefined })} className={chip(!marca)}>Todas</Link>
-        {brands?.filter((b) => b.slug !== "por-confirmar").map((b) => (
+        {withProducts(brands, "marca", marca).filter((b) => b.slug !== "por-confirmar").map((b) => (
           <Link key={b.slug} href={href({ marca: b.slug })} className={chip(marca === b.slug)}>{b.nombre}</Link>
         ))}
       </section>
