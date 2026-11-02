@@ -16,6 +16,8 @@ const FIELDS: { key: string; label: string; hint?: string; group: string }[] = [
   { key: "whatsapp", label: "WhatsApp para pedidos", hint: "Con código de país, sin +. Ej: 51999999999", group: "Tienda" },
   { key: "razon_social", label: "Razón social / titular", group: "Tienda" },
   { key: "ruc", label: "RUC (si tiene)", group: "Tienda" },
+  { key: "punto_recojo_nombre", label: "Nombre del punto de recojo", hint: "Ej: Parque Kennedy, Miraflores", group: "Recojo" },
+  { key: "punto_recojo_direccion", label: "Dirección del punto de recojo", hint: "Tal como la buscarías en Google Maps. Con ella la clienta ve el mapa.", group: "Recojo" },
   { key: "yape_numero", label: "Número de Yape", group: "Pagos" },
   { key: "yape_titular", label: "Titular de Yape", group: "Pagos" },
   { key: "plin_numero", label: "Número de Plin", group: "Pagos" },

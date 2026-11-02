@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { MapaRecojo } from "@/components/MapaRecojo";
 import { OrderLive } from "@/components/OrderClient";
 import { PayMethods } from "@/components/PayMethods";
 import { getOrder, getStore } from "@/lib/api";
@@ -61,6 +62,8 @@ export default async function OrderPage({ params }: { params: Promise<{ token: s
       )}
 
       {inReview && <p role="status" className="mt-8 border border-stone/50 bg-blush p-4 text-sm">Recibimos tu comprobante. Lo estamos verificando y te avisaremos por WhatsApp.</p>}
+
+      {order.metodo_entrega === "recojo" && !closed && <div className="mt-10"><MapaRecojo store={store} /></div>}
 
       <section className="mt-10" aria-labelledby="detalle">
         <h2 id="detalle" className="font-serif text-2xl">Detalle</h2>

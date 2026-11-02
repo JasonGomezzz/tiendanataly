@@ -46,6 +46,13 @@ class StoreSettings(models.Model):
     plin_numero = models.CharField(max_length=20, blank=True)
     plin_titular = models.CharField(max_length=120, blank=True)
 
+    # Punto de recojo: se muestra con un mapa de Google en el checkout y en el pedido.
+    punto_recojo_nombre = models.CharField("nombre del punto de recojo", max_length=120, blank=True, help_text="Ej: Parque Kennedy, Miraflores")
+    punto_recojo_direccion = models.CharField(
+        "dirección del punto de recojo", max_length=255, blank=True,
+        help_text="Tal como la buscarías en Google Maps. Ej: Parque Kennedy, Miraflores, Lima",
+    )
+
     class Meta:
         verbose_name = "configuración de la tienda"
         verbose_name_plural = "configuración de la tienda"
