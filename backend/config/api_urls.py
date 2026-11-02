@@ -22,6 +22,7 @@ router.register("me/orders", MyOrderViewSet, basename="my-order")
 
 auth_patterns = [
     path("csrf/", account_views.CsrfView.as_view()),
+    path("session/", account_views.SessionView.as_view()),
     path("register/", account_views.RegisterView.as_view()),
     path("login/", account_views.LoginView.as_view()),
     path("logout/", account_views.LogoutView.as_view()),

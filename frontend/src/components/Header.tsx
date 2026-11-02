@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useRef } from "react";
 import { Logo } from "./Logo";
 import { useCart } from "./CartProvider";
 
@@ -16,6 +17,25 @@ const linkClass = "text-[11px] font-medium uppercase tracking-[0.18em] text-umbe
 
 export function Header({ name }: { name: string }) {
   const { cart, setOpen } = useCart();
+  const menu = useRef<HTMLDetailsElement>(null);
+  const closeMenu = () => {
+    if (menu.current) menu.current.open = false;
+  };
+
+  // El menú del celular es un <details>: no se cierra solo al navegar. Se cierra al elegir una opción,
+  // al tocar fuera o con Escape, para que nunca quede tapando la página.
+  useEffect(() => {
+    const onPointer = (e: PointerEvent) => {
+      if (menu.current?.open && !menu.current.contains(e.target as Node)) menu.current.open = false;
+    };
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && closeMenu();
+    document.addEventListener("pointerdown", onPointer);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("pointerdown", onPointer);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, []);
 
   return (
     <header className="border-b border-stone/30 bg-white">
@@ -27,13 +47,13 @@ export function Header({ name }: { name: string }) {
             </Link>
           ))}
         </nav>
-        <details className="relative xl:hidden">
+        <details ref={menu} className="relative xl:hidden">
           <summary className="flex h-11 w-11 cursor-pointer list-none items-center justify-center text-xl" aria-label="Menú">
             ☰
           </summary>
           <nav aria-label="Categorías" className="absolute left-0 top-11 z-40 flex w-56 flex-col gap-1 border border-stone/30 bg-white p-3 shadow-lg">
             {NAV.map((item) => (
-              <Link key={item.href} href={item.href} className="py-3 text-xs font-medium uppercase tracking-[0.18em]">
+              <Link key={item.href} href={item.href} onClick={closeMenu} className="py-3 text-xs font-medium uppercase tracking-[0.18em]">
                 {item.label}
               </Link>
             ))}

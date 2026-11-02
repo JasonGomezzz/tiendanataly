@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
 import type { Me, Meta } from "@/lib/admin";
-import { api, ApiError, messageFrom, resetCsrf } from "@/lib/client";
+import { api, ApiError, messageFrom, resetCsrf, sessionInfo } from "@/lib/client";
 import { btnPrimary, inputClass, labelClass } from "../ui";
 
 type Ctx = { me: Me; meta: Meta; can: (perm: string) => boolean };
@@ -74,6 +74,11 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
 
   const load = useCallback(async () => {
     try {
+      const session = await sessionInfo();
+      if (!session.authenticated || !session.is_staff) {
+        setState(null);
+        return;
+      }
       const [me, meta] = await Promise.all([api<Me>("/admin/me/"), api<Meta>("/admin/meta/")]);
       setState({ me, meta });
     } catch {

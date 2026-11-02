@@ -46,6 +46,18 @@ class CsrfView(APIView):
         return Response({"csrfToken": get_token(request)})
 
 
+class SessionView(APIView):
+    """¿Hay una sesión iniciada? Responde 200 también para visitantes, para que el navegador no registre
+    un error 403 en cada página que solo quiere saber si hay una cuenta (cuenta, checkout, panel)."""
+
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        user = request.user
+        logged = bool(user and user.is_authenticated)
+        return Response({"authenticated": logged, "is_staff": bool(logged and user.is_staff)})
+
+
 class RegisterView(CsrfProtectedMixin, ScopedThrottleMixin, APIView):
     permission_classes = [AllowAny]
     throttle_scope = "register"

@@ -59,6 +59,13 @@ def test_login_correcto_y_logout(api, customer_user):
     assert api.get("/api/v1/me/").status_code in (401, 403)
 
 
+def test_sesion_responde_200_para_visitantes_y_clientas(api, customer_user):
+    # Los visitantes reciben 200 (no 403) para no llenar la consola del navegador de errores.
+    assert api.get("/api/v1/auth/session/").json() == {"authenticated": False, "is_staff": False}
+    api.post("/api/v1/auth/login/", {"email": "clienta1@example.com", "password": PASSWORD}, format="json")
+    assert api.get("/api/v1/auth/session/").json() == {"authenticated": True, "is_staff": False}
+
+
 def test_login_incorrecto_da_mensaje_generico(api, customer_user):
     wrong_pass = api.post("/api/v1/auth/login/", {"email": "clienta1@example.com", "password": "mala-clave-1"}, format="json")
     no_user = api.post("/api/v1/auth/login/", {"email": "nadie@example.com", "password": "mala-clave-1"}, format="json")

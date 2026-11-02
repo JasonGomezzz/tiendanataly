@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 import { money } from "@/lib/format";
 import { CartLines } from "./CartLines";
@@ -8,6 +9,13 @@ import { useCart } from "./CartProvider";
 
 export function CartDrawer() {
   const { cart, open, setOpen } = useCart();
+  const pathname = usePathname();
+
+  // Si la página cambia con la bolsa abierta (por ejemplo con «atrás» del navegador), la bolsa se cierra:
+  // un panel que queda tapando la página deja a la clienta sin poder navegar.
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname, setOpen]);
 
   useEffect(() => {
     if (!open) return;
