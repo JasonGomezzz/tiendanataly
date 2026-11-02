@@ -47,7 +47,9 @@
 
 ## Mejoras futuras (no bloquean el lanzamiento)
 
-- [ ] Autocompletar direcciones y envío por distancia en Lima con Google; tarifas de couriers para provincias. Diseño, costos y salvaguardas en `docs/direcciones-y-envio.md` (sesiones de autocompletado, llamadas a Routes desde Django con caché, alertas de presupuesto).
+- [ ] **Google Maps (construido, falta activarlo):** mapa del punto de recojo y sugerencias de dirección en el checkout. Presupuesto previsto S/ 39 al mes. Pasos, topes de gasto y lista de verificación en `docs/direcciones-y-envio.md`; se apaga o enciende con `GOOGLE_MAPS_EMBED_KEY` y `GOOGLE_PLACES_KEY`, y sin llaves la tienda funciona igual.
+- [ ] Escribir el punto de recojo real en `/admin` → Ajustes → *Recojo* (nombre y dirección tal como en Google Maps).
+- [ ] Envío por distancia en Lima (Routes) y tarifas de couriers para provincias: no construidos; ver el final de `docs/direcciones-y-envio.md`.
 - [ ] Sentry también en el frontend (hay que ajustar la CSP y evitar datos personales).
 
 ## Operación continua
