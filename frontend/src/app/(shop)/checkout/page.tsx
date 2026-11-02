@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { useCart } from "@/components/CartProvider";
 import { btnPrimary, inputClass, labelClass } from "@/components/ui";
-import { api, ApiError, messageFrom } from "@/lib/client";
+import { api, ApiError, messageFrom, sessionInfo } from "@/lib/client";
 import { money } from "@/lib/format";
 import type { Order, StoreInfo, Zone } from "@/lib/types";
 
@@ -30,7 +30,7 @@ export default function CheckoutPage() {
       setZoneId((cur) => cur ?? z[0]?.id ?? null);
     }).catch(() => undefined);
     api<StoreInfo>("/store-settings/public/").then(setStore).catch(() => undefined);
-    api<Me>("/me/").then((me) => setForm((f) => ({ ...f, nombre: me.nombre, telefono: me.telefono, email: me.email }))).catch(() => undefined);
+    sessionInfo().then((s) => s.authenticated ? api<Me>("/me/") : null).then((me) => me && setForm((f) => ({ ...f, nombre: me.nombre, telefono: me.telefono, email: me.email }))).catch(() => undefined);
   }, []);
 
   const zone = zones.find((z) => z.id === zoneId) ?? null;

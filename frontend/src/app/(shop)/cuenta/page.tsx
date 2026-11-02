@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { useCart } from "@/components/CartProvider";
 import { btnOutline, btnPrimary, inputClass, labelClass } from "@/components/ui";
-import { api, ApiError, messageFrom, resetCsrf } from "@/lib/client";
+import { api, ApiError, messageFrom, resetCsrf, sessionInfo } from "@/lib/client";
 import { STATE_LABEL, money } from "@/lib/format";
 import type { Order, Paginated } from "@/lib/types";
 
@@ -21,6 +21,10 @@ export default function AccountPage() {
 
   const load = useCallback(async () => {
     try {
+      if (!(await sessionInfo()).authenticated) {
+        setMe(null);
+        return;
+      }
       setMe(await api<Me>("/me/"));
       setOrders((await api<Paginated<Order>>("/me/orders/")).results);
     } catch {

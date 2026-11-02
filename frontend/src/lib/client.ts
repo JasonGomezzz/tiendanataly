@@ -55,3 +55,12 @@ export async function api<T = unknown>(path: string, init: { method?: string; js
   if (!res.ok) throw new ApiError(res.status, data);
   return data as T;
 }
+
+/** ¿Hay una sesión iniciada? Responde 200 también a visitantes, así no se registran errores 403 en la consola. */
+export async function sessionInfo(): Promise<{ authenticated: boolean; is_staff: boolean }> {
+  try {
+    return await api<{ authenticated: boolean; is_staff: boolean }>("/auth/session/");
+  } catch {
+    return { authenticated: false, is_staff: false };
+  }
+}
